@@ -1,0 +1,3 @@
+eigen + gmtl?
+
+https://stackoverflow.com/questions/1380371/what-are-the-most-widely-used-c-vector-matrix-math-linear-algebra-libraries-a
