@@ -7,8 +7,9 @@ project(
 )
 
 file(GLOB PhysvoyantSRC
-     "source/*.hpp"
-     "source/*.cpp"
+     "source/*.*pp"
+     "source/DLinkedList/*.*pp"
+	 "source/Engine/*.*pp"
 )
 
 file(GLOB_RECURSE GLFW
@@ -17,11 +18,26 @@ file(GLOB_RECURSE GLFW
 
 add_executable("${PROJECT_NAME}" "${PhysvoyantSRC}")
 
+# Post build events
+
+# GLFW
+# mkdir "$(SolutionDir)depdll\"
+# copy /Y "$(TargetPath)" "$(SolutionDir)depdll\"
+
+# ALL OTHER
+# copy /Y "$(SolutionDir)depdll\*.dll" "$(TargetDir)"
+
+# GLM
+
+add_subdirectory(source/glm)
+# find_package(glm REQUIRED)
+
+
 # GLFW
 
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS ON CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES ON CACHE BOOL "" FORCE)
 
 set(CMAKE_FIND_DEBUG_MODE TRUE)
 find_package(OpenGL REQUIRED)

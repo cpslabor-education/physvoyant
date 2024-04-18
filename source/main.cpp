@@ -1,41 +1,14 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
+
 #ifdef OPENGL_FOUND
 
 #endif // OPENGL_FOUND
 
 
-void DrawTest(GLFWwindow* window)
-{
-	//Clear information from last draw
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glClearColor(255.0f, 120.0f, 180.0f, 255.0f); //clear background screen to black
-
-	//glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
-	//glLoadIdentity(); //Reset the drawing perspective
-	glLoadIdentity();
-	glTranslatef(0.0, 0.0, -20);
-	glPushMatrix();
-	glColor3f(1.0f, 0.0, 0.0);
-	glBegin(GL_POLYGON);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(1.5, -1.5, -10.5);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(1.5, 1.5, -10.5);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-1.5, 1.5, -10.5);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-1.5, -1.5, -10.5);
-	glEnd();
-	glPopMatrix();
-
-	glfwSwapBuffers(window);
-	return;
-}
-
 int main()
 {
+	
 	glfwInit();
 	GLFWwindow* window;
 	window = glfwCreateWindow(640, 480, "Test page", NULL, NULL);
