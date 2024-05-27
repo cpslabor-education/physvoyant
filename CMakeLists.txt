@@ -6,17 +6,19 @@ project(
   LANGUAGES CXX
 )
 
-file(GLOB PhysvoyantSRC
-     "source/*.*pp"
-     "source/DLinkedList/*.*pp"
-	 "source/Engine/*.*pp"
+file(GLOB PhysvoyantSrc
+     "source/*.*"
+     "source/data_structures/*.*"
+	 "source/engine/*.*"
+	 "source/renderer/*.*"
+	 "source/interfaces/*.*"
 )
 
 file(GLOB_RECURSE GLFW
 	"source/GLFW/*.*"
 )
 
-add_executable("${PROJECT_NAME}" "${PhysvoyantSRC}")
+add_executable("${PROJECT_NAME}" "${PhysvoyantSrc}")
 
 # Post build events
 
@@ -31,6 +33,7 @@ add_executable("${PROJECT_NAME}" "${PhysvoyantSRC}")
 
 add_subdirectory(source/glm)
 # find_package(glm REQUIRED)
+# target_link_libraries(${PROJECT_NAME} glm::glm)
 
 
 # GLFW
@@ -39,10 +42,10 @@ set(GLFW_BUILD_DOCS ON CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES ON CACHE BOOL "" FORCE)
 
-set(CMAKE_FIND_DEBUG_MODE TRUE)
+#set(CMAKE_FIND_DEBUG_MODE TRUE)
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
-set(CMAKE_FIND_DEBUG_MODE FALSE)
+#set(CMAKE_FIND_DEBUG_MODE FALSE)
 
 
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
