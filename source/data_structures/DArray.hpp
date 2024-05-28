@@ -7,12 +7,12 @@ template<class T>
 class DArray
 {
 public:
-	DArray() : capacity(2)
+	DArray() : capacity(8)
 	{
 		Init(capacity);
 	}
 
-	DArray(int capacity) : capacity(capacity)
+	DArray(unsigned int capacity) : capacity(capacity)
 	{
 		Init(capacity);
 	}
@@ -34,11 +34,19 @@ public:
 
 	void ShrinkToFit();
 
-	void operator=(const DArray& other);
-
-	T& operator[](int index)
+	void operator=(const DArray& other)
 	{
-		if (index < 0 || index >= capacity)
+		this->capacity = other.capacity;
+		Init(capacity);
+		for (unsigned int i = 0; i < capacity; i++)
+		{
+			this->internalArray[i] = other.internalArray[i];
+		}
+	}
+
+	T& operator[](unsigned int index)
+	{
+		if (index >= capacity)
 		{
 			throw std::out_of_range("Index out of range");
 		}
@@ -51,13 +59,20 @@ public:
 	}
 
 private:
-	void Init(int size)
+	void Init(unsigned int size)
 	{
-		internalArray = (T*)calloc(size, sizeof(T));
+		if (size > 0) // Mert 0 méretre is foglal címet >:(
+		{
+			internalArray = (T*)calloc(size, sizeof(T)); 
+		}
+		else
+		{
+			internalArray = nullptr;
+		}
 	}
 
 	T* internalArray;
 	unsigned int capacity;
 };
 
-#endif // !DARRAY_H
+#endif // !DARRAY

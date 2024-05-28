@@ -14,5 +14,7 @@
 #define INCL_GLFW <GLFW/glfw3.h>
 #define INCL_GLM <glm/glm.hpp>
 
+#define ARRAY_DEFAULT_SIZE 8
+
 
 #endif // !DEFINES

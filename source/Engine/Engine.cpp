@@ -7,6 +7,8 @@ Engine* Engine::instancePtr = nullptr;
 
 Engine::~Engine()
 {
+	DestroyAllWindows();
+	delete windows;
 	glfwTerminate();
 }
 

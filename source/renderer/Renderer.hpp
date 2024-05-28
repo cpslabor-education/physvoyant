@@ -9,11 +9,16 @@ class Renderer
 public:
 	Renderer();
 
-	Renderer(Renderer& other) = default;
+	Renderer(Renderer& other)
+	{
+	}
 
 	~Renderer();
 
-	void operator=(const Renderer& other);
+	void operator=(const Renderer& other)
+	{
+
+	}
 
 	int CreateWindow(int width, int height, char* title);
 	int CreateWindow(int width, int height, const char* title);

@@ -12,6 +12,7 @@ file(GLOB PhysvoyantSrc
 	 "source/engine/*.*"
 	 "source/renderer/*.*"
 	 "source/interfaces/*.*"
+	 "source/consoleReader/*.*"
 )
 
 file(GLOB_RECURSE GLFW

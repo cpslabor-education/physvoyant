@@ -1,18 +1,17 @@
 #include <iostream>
 #include "defines.hpp"
-//#include "engine/Engine.hpp"
+#include "engine/Engine.hpp"
 
 #include "data_structures/include.hpp"
 
 
 int main()
 {
-	//Engine* e = Engine::GetInstance();
-	Reflection<int>* arr = new Reflection<int>();
-	int asd = 0;
-	arr->AddBinding(ADDBINDING(asd));
-	arr->RemoveBinding(NAMEOF(asd));
-	// delete arr;
+	Engine* e = Engine::GetInstance();
+
+	dde
+
+	delete e;
 	// system("pause");
 
 	return 0;
