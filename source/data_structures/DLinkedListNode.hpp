@@ -9,10 +9,6 @@ template <class T>
 class DLinkedListNode
 {
 public:
-	/// <summary>
-	/// The stored data
-	/// </summary>
-	T data;
 
 	/// <summary>
 	/// The next element in the list
@@ -23,6 +19,11 @@ public:
 	/// The previous element in the list
 	/// </summary>
 	DLinkedListNode<T>* previousElement;
+
+	/// <summary>
+	/// The stored data
+	/// </summary>
+	T data;
 
 	DLinkedListNode() : data(0), nextElement(nullptr), previousElement(nullptr)
 	{
@@ -58,11 +59,6 @@ class DLinkedListNode<T*>
 public:
 
 	/// <summary>
-	/// The stored data
-	/// </summary>
-	T* data;
-
-	/// <summary>
 	/// The next element in the list
 	/// </summary>
 	DLinkedListNode<T*>* nextElement;
@@ -71,6 +67,11 @@ public:
 	/// The previous element in the list
 	/// </summary>
 	DLinkedListNode<T*>* previousElement;
+
+	/// <summary>
+	/// The stored data
+	/// </summary>
+	T* data;
 
 	DLinkedListNode() : data(nullptr), nextElement(nullptr), previousElement(nullptr)
 	{

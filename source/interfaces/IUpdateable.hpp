@@ -3,9 +3,12 @@
 
 __interface IUpdateable
 {
-	void PreUpdate();
+public:
+	//void FirstUpdate();
+	//void PreUpdate();
 	void Update();
-	void PostUpdate();
+	//void PostUpdate();
+	//void LastUpadte();
 };
 
 #endif

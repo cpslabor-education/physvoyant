@@ -9,9 +9,7 @@ class Renderer
 public:
 	Renderer();
 
-	Renderer(Renderer& other)
-	{
-	}
+	Renderer(Renderer& other);
 
 	~Renderer();
 

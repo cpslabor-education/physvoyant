@@ -14,7 +14,8 @@ Renderer::~Renderer()
 
 int Renderer::CreateWindow(int width, int height, char* title)
 {
-	return CreateWindow(width, height, (const char*)title);
+	return 0;
+	// return CreateWindow(width, height, const_cast<char*>(title));
 }
 
 int Renderer::CreateWindow(int width, int height, const char* title)
@@ -22,7 +23,7 @@ int Renderer::CreateWindow(int width, int height, const char* title)
 	if (!glfwInit())
 	{
 	#if DEBUG_LEVEL >= 1
-		WriteInfo("GLFW Initialisation failed");
+		Engine::WriteInfo("GLFW Initialisation failed");
 	#endif // DEBUG_LEVEL >= 1
 	}
 
@@ -31,8 +32,9 @@ int Renderer::CreateWindow(int width, int height, const char* title)
 	if (window == nullptr)
 	{
 	#if DEBUG_LEVEL >= 1
-		WriteInfo("GLFW window creation failed");
+		Engine::WriteInfo("GLFW window creation failed");
 	#endif // DEBUG_LEVEL >= 1
+		return -1;
 	}
 
 	glViewport(0, 0, width, height);

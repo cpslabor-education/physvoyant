@@ -1,8 +1,11 @@
 #ifndef ENGINE
 #define ENGINE
 
-#include <GLFW/glfw3.h>
-#include "../Renderer/Renderer.hpp"
+#include "../defines.hpp"
+#include INCL_GLFW
+#include INCL_RENDERER
+#include INCL_DATA_STRUCTURES
+#include INCL_SCENE
 
 class Engine
 {
@@ -25,24 +28,31 @@ public:
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void ErrorCallback(int error, char* description);
 	static void ErrorCallback(int error, const char* description);
-	static void WriteInfo(char* message);
-	static void WriteInfo(const char* message);
-	static void WriteInfo(long long message);
-	static void WriteInfo(double message);
+	template<typename T>
+	static void WriteInfo(T message)
+	{
+		std::cout << message << std::endl;
+	}
 
 	static unsigned long long GetEpochTime();
 
-	int CreateWindow(int width, int height, char* title);
-	int CreateWindow(int width, int height, const char* title);
-	void DestroyWindow(int index);
-	void DestroyAllWindows();
+	void SetActiveScene(Scene* scene);
+	void Start();
+	void Stop();
 
+	//int CreateWindow(int width, int height, char* title);
+	//int CreateWindow(int width, int height, const char* title);
+	//void DestroyWindow(int index);
+	//void DestroyAllWindows();
+
+	//void FocusWindow(int index);
+	//void FocusWindow(GLFWwindow* window);
 
 private:
 	Engine();
 	void Initialise();
 	static Engine* instancePtr;
-	Renderer** windows;
+	Scene* activeScene;
 
 };
 

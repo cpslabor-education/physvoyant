@@ -7,12 +7,15 @@ project(
 )
 
 file(GLOB PhysvoyantSrc
-     "source/*.*"
-     "source/data_structures/*.*"
-	 "source/engine/*.*"
-	 "source/renderer/*.*"
-	 "source/interfaces/*.*"
-	 "source/consoleReader/*.*"
+	"source/*.*"
+	"source/components/*.*"
+	"source/data_structures/*.*"
+	"source/engine/*.*"
+	"source/game_objects/*.*"
+	"source/geometry/*.*"
+	"source/interfaces/*.*"
+	"source/renderer/*.*"
+	"source/scene/*.*"
 )
 
 file(GLOB_RECURSE GLFW
@@ -34,7 +37,7 @@ add_executable("${PROJECT_NAME}" "${PhysvoyantSrc}")
 
 add_subdirectory(source/glm)
 # find_package(glm REQUIRED)
-# target_link_libraries(${PROJECT_NAME} glm::glm)
+target_link_libraries(${PROJECT_NAME} glm::glm)
 
 
 # GLFW
