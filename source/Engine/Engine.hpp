@@ -6,6 +6,7 @@
 #include INCL_RENDERER
 #include INCL_DATA_STRUCTURES
 #include INCL_SCENE
+#include "Clock.hpp"
 
 class Engine
 {
@@ -34,8 +35,6 @@ public:
 		std::cout << message << std::endl;
 	}
 
-	static unsigned long long GetEpochTime();
-
 	void SetActiveScene(Scene* scene);
 	void Start();
 	void Stop();
@@ -48,12 +47,12 @@ public:
 	//void FocusWindow(int index);
 	//void FocusWindow(GLFWwindow* window);
 
+	Clock clock;
 private:
 	Engine();
 	void Initialise();
 	static Engine* instancePtr;
 	Scene* activeScene;
-
 };
 
 

@@ -1,6 +1,10 @@
 #ifndef DEFINES
 #define DEFINES
 
+typedef __int64 intStandard_t;
+typedef unsigned __int64 uintStandard_t;
+typedef double realStandard_t;
+
 // 0: no debug
 // 1: debug
 // 2: memory allocation
@@ -17,6 +21,7 @@
 #define MAX_WINDOWS 1
 
 #define INCL_CAMERA "../game_objects/Camera.hpp"
+#define INCL_CLOCK "../engine/Clock.hpp"
 #define INCL_COMPONENTS "../components/include_components.hpp"
 #define INCL_DATA_STRUCTURES "../data_structures/include_data_structures.hpp"
 #define INCL_ENGINE "../engine/Engine.hpp"
@@ -30,17 +35,51 @@
 #define INCL_QUATERNION <glm/gtc/quaternion.hpp>
 #define INCL_QUATERNION_EXTENSIONS <glm/gtx/quaternion.hpp>
 
+#define OCTTREE_DEPTH 4
+#define OCTTREE_CHUNK_SIZE 1024
+
 #define GLM_PRECISION glm::packed_highp
-#define VECTOR3 glm::vec<3, double, glm::packed_highp>
-#define QUATERNION glm::qua<double, GLM_PRECISION>
-#define TRANSFORM_MATRIX glm::tmat4x4<double>
+#define VECTOR3 glm::vec<3, realStandard_t, GLM_PRECISION>
+#define QUATERNION glm::qua<realStandard_t, GLM_PRECISION>
+#define TRANSFORM_MATRIX glm::tmat4x4<realStandard_t>
+typedef uintStandard_t timeValue_t;
+
+// 0: second, 1 millisecond, 2 microsecond, 3 nanosecond
+#define TIME_SCALE 2
+
+#if TIME_SCALE == 0
+	#define SECOND_UNIT 1.0
+	#define TIME_CAST_SIZE std::chrono::seconds
+#elif TIME_SCALE == 1
+	#define SECOND_UNIT 1000.0
+	#define TIME_CAST_SIZE std::chrono::milliseconds
+#elif TIME_SCALE == 2
+	#define SECOND_UNIT 1000000.0
+	#define TIME_CAST_SIZE std::chrono::microseconds
+#elif TIME_SCALE == 3
+	#define SECOND_UNIT 1000000000.0
+	#define TIME_CAST_SIZE std::chrono::nanoseconds
+#else
+	static_assert(false, "Time unit is incorrect in " __FILE__);
+#endif // TIME_SCALE
+
+#define SECOND 1.0
+#define MILLISECOND 0.001
+#define MICROSECOND 0.000001
+#define NANOSECOND 0.000000001
+
+// Converts time to seconds
+#define TO_SECOND(param) ((param) / (SECOND_UNIT))
+
+// Converts seconds to time units defined above
+#define TO_TIME_UNIT(param) ((param) * (SECOND_UNIT))
 
 
 // Null check
 #define NULL_CHECK_FUNCTION_CALL(ptr, func, ...) \
 	do\
 	{\
-		if ((ptr) != NULL) \
+		if ((ptr) == NULL) \
 		{ \
 			func(__VA_ARGS__); \
 		} \
@@ -49,7 +88,7 @@
 #define NULL_CHECK(ptr) \
 	do\
 	{\
-		if ((ptr) == 0)\
+		if ((ptr) == NULL)\
 		{\
 			throw std::bad_alloc();\
 		}\

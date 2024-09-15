@@ -20,12 +20,14 @@ public:
 
 	void UpdateScene();
 
-	bool AddObject(GameObject* object);
+	void AddObject(GameObject* object);
 
 private:
 
 	Camera* camera;
 	ChunkedVector<GameObject*> gameObjects;
+	// OctTree<GameObject*, 5> objectTree;
+	size_t boundsWidth = OCTTREE_CHUNK_SIZE * glm::pow(2, 5);
 	GLFWwindow* window;
 
 };

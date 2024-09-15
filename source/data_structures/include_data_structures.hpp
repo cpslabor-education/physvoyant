@@ -2,6 +2,7 @@
 #define DATA_STRUCTURES
 
 #include "ChunkedVector.hpp"
+#include "OctTree.hpp"
 //#include "DLinkedList.hpp"
 //#include "DArray.hpp"
 //#include "Reflection.hpp"

@@ -1,5 +1,4 @@
 #include "Engine.hpp"
-#include "../Defines.hpp"
 #include <iostream>
 #include <chrono>
 
@@ -18,13 +17,6 @@ void Engine::ErrorCallback(int error, char* description)
 void Engine::ErrorCallback(int error, const char* description)
 {
 	std::cout << "Error code: " << error << "\nDescription: " << description << std::endl;
-}
-
-unsigned long long Engine::GetEpochTime()
-{
-	using namespace std::chrono;
-	milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-	return ms.count();
 }
 
 void Engine::SetActiveScene(Scene* scene)
@@ -95,13 +87,14 @@ void Engine::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 //	glfwFocusWindow(window);
 //}
 
-Engine::Engine()
-{
-	Initialise();
-}
 
 void Engine::Initialise()
 {
 	activeScene = nullptr;
 	glfwSetErrorCallback(ErrorCallback);
+}
+
+Engine::Engine() : activeScene(0), clock()
+{
+
 }

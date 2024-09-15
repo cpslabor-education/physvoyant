@@ -9,66 +9,140 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include INCL_QUATERNION
 #include INCL_QUATERNION_EXTENSIONS
+#include INCL_GEOMETRY
+//#include <glm/gtx/matrix_interpolation.hpp>
 #include INCL_GLFW
 #include INCL_COMPONENTS
+#include <glm/gtx/compatibility.hpp>
 
-void Foo(int asd)
-{
-
-}
 
 int main()
 {
+	OctTree<GameObject*>* tree = new OctTree<GameObject*>(VECTOR3(0), 2, 16);
+
+
+	tree->Insert(new GameObject(), VECTOR3(1, 1, 1));
+	tree->Insert(new GameObject(), VECTOR3(1, 1, 2));
+	tree->Insert(new GameObject(), VECTOR3(1, 1, 3));
+	tree->Insert(new GameObject(), VECTOR3(17, 17, 17));
+	tree->Insert(new GameObject(), VECTOR3(17, 17, 17));
+	tree->GetNeighbours(VECTOR3(1, 2, 3));
+	ChunkedVector<GameObject*>* tmp;
+
+	uintStandard_t index = tree->Find(VECTOR3(17, 17, 18), &tmp);
+
+	tree->MoveItem(index, (*tmp)[0], tree->Find(VECTOR3(-1, -1, -1)));
+	tree->MoveItem(index, (*tmp)[1], tree->Find(VECTOR3(-1, -1, -1)));
+
+	//for (size_t i = 0; i < 32; i++)
+	//{
+	//	for (size_t j = 0; j < 32; j++)
+	//	{
+	//		for (size_t k = 0; k < 32; k++)
+	//		{
+	//			dummy = new GameObject();
+	//			dummy->transform.position = VECTOR3(i, j, k);
+	//			tree->Insert(dummy, dummy->transform.position);
+	//		}
+	//	}
+	//}
+	GameObject* dummy = new GameObject();
+	dummy->transform.position = VECTOR3(1, 1, 1);
+	tree->Insert(dummy, dummy->transform.position);
+
+	ChunkedVector<GameObject*>* vec = nullptr;
+	index = tree->Find(VECTOR3(0, 1, 2), &vec);
+	tree->MoveItem(index, (*vec)[0], tree->Find(VECTOR3(-1, -1, -1)));
+	// ChunkedVector<GameObject*>** result = tree->GetNeighbours(VECTOR3(-2, 5, -22));
+	delete tree;
+	delete dummy;
+	std::cout << _CrtDumpMemoryLeaks();
+	return 0;
+	//tree->Find(VECTOR3(0, 0, 0));
+	//tree->Find(VECTOR3(-321, 661, -301));
+	//tree->Find(VECTOR3(-30021, 60061, -30001));
 	Engine* e = Engine::GetInstance();
+	e->clock.SetPhysicsTimeStep(1);
+	timeValue_t minMax[2]{ UINT_FAST64_MAX, 0 };
+	for (size_t i = 0; i < 100000; i++)
+	{
+		e->clock.Update();
+		timeValue_t curr = e->clock.DeltaTime();
+		minMax[0] = glm::min(minMax[0], curr);
+		minMax[1] = glm::max(minMax[1], curr);
+	}
+	e->WriteInfo(minMax[0]);
+	e->WriteInfo(minMax[1]);
+	e->WriteInfo(TO_SECOND(minMax[0]));
+	e->WriteInfo(TO_SECOND(minMax[1]));
+	delete e;
 	Scene sample;
 
-	GameObject* sphere1 = new GameObject();
-	sphere1->AddComponent((SphereCollider)(1, 0));
-	sphere1->transform.SetPosition(0, 0, 0);
+	//GameObject* sphere1 = new GameObject();
+	//sphere1->AddComponent((SphereCollider)(1, 0));
+	//sphere1->transform.SetPosition(0, 0, 0);
 
-	GameObject* sphere2 = new GameObject();
-	sphere1->AddComponent((SphereCollider)(1, 0));
-	sphere1->transform.SetPosition(3, 0, 0);
+	//GameObject* sphere2 = new GameObject();
+	//sphere1->AddComponent((SphereCollider)(1, 0));
+	//sphere1->transform.SetPosition(3, 0, 0);
 
-	sample.AddObject(sphere1);
-	sample.AddObject(sphere2);
+	//sample.AddObject(sphere1);
+	//sample.AddObject(sphere2);
 
-	sphere1->transform.ApplyForce(VECTOR3(1, 0, 0));
+	//sphere1->transform.ApplyForce(VECTOR3(1, 0, 0));
+	//glm::abs(3);
+	//glm::length(VECTOR3(3, 4, 5));
+	//glm::dvec3 vector(100, 10, 5);
+	//glm::dvec3 vector2(0, 0, 0);
+	//glm::dvec3 result = CubicInterpolate(vector, vector2, 0.2);
 
-	std::cout << "asd";
+	//QUATERNION quat(1, 1, 2, 32);
 
-	VECTOR3 v1(1, 2, 3);
-	VECTOR3 v2(10, 0, 0);
+	//vector = glm::normalize(quat) * vector;
+	//result = glm::lerp(vector, vector2, 0.2);
+	//glm::lerp(0.0, 3.0, 0.2);
 
-	QUATERNION q1(0, 1, 2, 3);
-	QUATERNION q2(0, 1, 0, 0);
-
-	q1 += q2;
-
-	v1 += v2;
-
-	v2[0] = 1;
-	v2[1] = 2;
-	v2[2] = 3;
+	//int l = vector.length();
+	//glm::faceforward(vector, vector, vector);
 
 
-	glm::mat4 MyMatrix = glm::mat4();
-	glm::quat myQuat;
 
-	myQuat = glm::quat(0.707107, 0.707107, 0.00, 0.000);
-	glm::mat4 RotationMatrix = glm::toMat4(myQuat);
+	//glm::interpolate(VECTOR3(3,2,3), VECTOR3(3,2,2), 0.3);
 
-	glm::highp_f64vec3 asd;
-	double val = 0.5;
-	unsigned long long val2 = *(unsigned long long*) & val;
+	//std::cout << "asd";
+
+	//VECTOR3 v1(1, 2, 3);
+	//VECTOR3 v2(10, 0, 0);
+
+	//QUATERNION q1(0, 1, 2, 3);
+	//QUATERNION q2(0, 1, 0, 0);
+
+	//q1 += q2;
+
+	//v1 += v2;
+
+	//v2[0] = 1;
+	//v2[1] = 2;
+	//v2[2] = 3;
 
 
-	GameObject* o = new GameObject();
-	o->GetComponentsOfType<Engine>();
+	//glm::mat4 MyMatrix = glm::mat4();
+	//glm::quat myQuat;
 
-	Engine::WriteInfo(e);
-	delete e;
-	// system("pause");
+	//myQuat = glm::quat(0.707107, 0.707107, 0.00, 0.000);
+	//glm::mat4 RotationMatrix = glm::toMat4(myQuat);
+
+	//glm::highp_f64vec3 asd;
+	//realStandard_t val = 0.5;
+	//unsigned long long val2 = *(unsigned long long*) & val;
+
+
+	//GameObject* o = new GameObject();
+	//o->GetComponentsOfType<Engine>();
+
+	//Engine::WriteInfo(e);
+	//delete e;
+	//// system("pause");
 #if DEBUG_LEVEL >= 2
 	Engine::WriteInfo(_CrtDumpMemoryLeaks());
 #endif

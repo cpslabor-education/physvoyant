@@ -23,7 +23,7 @@ void Scene::UpdateScene()
 	camera->Update();
 }
 
-bool Scene::AddObject(GameObject* object)
+void Scene::AddObject(GameObject* object)
 {
-	return gameObjects.push_back(object);
+	gameObjects.push_back(object);
 }
