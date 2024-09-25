@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 #include "../defines.hpp"
 
-Scene::Scene() : camera(nullptr), window(nullptr)
+Scene::Scene() : camera(), gameObjects(), objectTree(), boundsWidth(0), window(nullptr)
 {
 
 }
@@ -20,10 +20,11 @@ void Scene::UpdateScene()
 	{
 		gameObjects[i]->Update();
 	}
-	camera->Update();
+	camera.Update();
 }
 
 void Scene::AddObject(GameObject* object)
 {
 	gameObjects.push_back(object);
+	objectTree.Insert(object, object->transform.position);
 }

@@ -35,6 +35,10 @@ class OctTree
 	//  negative, negative, negative
 
 public:
+	OctTree() : center(VECTOR3(0)), widthOnLayer(nullptr), depth(0), elements()
+	{
+
+	}
 	OctTree(VECTOR3& center, uintStandard_t depth, uintStandard_t chunkSize) : center(center), widthOnLayer(nullptr), depth(depth), elements()
 	{
 		assert(depth <= 9);
@@ -140,17 +144,17 @@ public:
 		return realIndex;
 	}
 
-	uintStandard_t Find(VECTOR3& point, std::list<T>*** result)
-	{
-		uintStandard_t realIndex = Find(point);
-		*result = &(elements[realIndex]);
-		return realIndex;
-	}
-
 	uintStandard_t Find(VECTOR3& point, std::list<T>** result)
 	{
 		uintStandard_t realIndex = Find(point);
 		*result = (elements[realIndex]);
+		return realIndex;
+	}
+
+	uintStandard_t Find(VECTOR3& point, std::list<T>*** result)
+	{
+		uintStandard_t realIndex = Find(point);
+		*result = &(elements[realIndex]);
 		return realIndex;
 	}
 

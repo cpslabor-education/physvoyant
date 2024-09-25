@@ -3,6 +3,8 @@
 
 #include "ChunkedVector.hpp"
 #include "OctTree.hpp"
+#include "ComponentContainer.hpp"
+#include "ComponentIdentifier.hpp"
 //#include "DLinkedList.hpp"
 //#include "DArray.hpp"
 //#include "Reflection.hpp"

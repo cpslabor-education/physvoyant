@@ -1,12 +1,10 @@
 #ifndef ICOLLIDER
 #define ICOLLIDER
 
-__interface ICollider;
 class GameObject;
 
 #include "../defines.hpp"
 #include INCL_GLM
-
 
 __interface ICollider : public IComponent
 {

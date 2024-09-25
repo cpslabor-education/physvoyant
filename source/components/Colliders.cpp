@@ -1,19 +1,32 @@
 #include "Colliders.hpp"
 #include INCL_GAME_OBJECTS
 
-void SphereCollider::Execute(GameObject* caller, void* params)
+SphereCollider::SphereCollider() : radius(0.0), layer(0), ID(0)
 {
+}
+
+SphereCollider::SphereCollider(const realStandard_t radius, uintStandard_t layer) : radius(radius), layer(layer)
+{
+}
+
+SphereCollider::~SphereCollider()
+{
+}
+
+void* SphereCollider::Execute(GameObject* caller, void* params)
+{
+	return nullptr;
 }
 
 IComponent* SphereCollider::Clone(void* params) const
 {
-	return nullptr;
+	return new SphereCollider(*this);
 }
 
 VECTOR3 SphereCollider::CollideWith(GameObject* caller, GameObject* other)
 {
 	VECTOR3 result (0, 0, 0);
-	ICollider* otherCollider = other->GetComponentOfType<ICollider*>();
+	ICollider* otherCollider = other->components.GetComponent<ICollider*>();
 	if (dynamic_cast<SphereCollider*> (otherCollider))
 	{
 		SphereCollider* otherSphere = dynamic_cast<SphereCollider*> (otherCollider);
@@ -36,13 +49,24 @@ VECTOR3 SphereCollider::CollideWith(GameObject* caller, VECTOR3* point)
 	return result;
 }
 
-void SquareCollider::Execute(GameObject* caller, void* params)
+componentID_t SphereCollider::GetID()
 {
+	return ID;
+}
+
+void* SquareCollider::Execute(GameObject* caller, void* params)
+{
+	return nullptr;
 }
 
 IComponent* SquareCollider::Clone(void* params) const
 {
-	return nullptr;
+	return new SquareCollider(*this);
+}
+
+componentID_t SquareCollider::GetID()
+{
+	return ID;
 }
 
 VECTOR3 SquareCollider::CollideWith(GameObject* caller, GameObject* other)

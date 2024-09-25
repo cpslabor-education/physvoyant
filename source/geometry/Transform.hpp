@@ -5,7 +5,6 @@ class Transform;
 
 #include "../defines.hpp"
 #include INCL_GLM
-#include INCL_INTERFACES
 #define GLM_FORCE_QUAT_DATA_WXYZ
 #include INCL_QUATERNION
 
@@ -25,7 +24,7 @@ public:
 	// TODO: apply force, apply motion
 
 	// Constructors
-	Transform()	: position(0), velocity(0), acceleration(0), rotation(0, 0, 0, 0), angularVelocity(0, 0, 0, 0), angularAcceleration(0, 0, 0, 0), mass(0)
+	Transform()	: position(0), velocity(0), acceleration(0), rotation(glm::identity<QUATERNION>()), angularVelocity(glm::identity<QUATERNION>()), angularAcceleration(glm::identity<QUATERNION>()), mass(0)
 	{
 	}
 

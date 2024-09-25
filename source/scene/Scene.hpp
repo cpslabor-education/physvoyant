@@ -13,7 +13,13 @@ class Scene;
 
 class Scene 
 {
+	Camera camera;
+	ChunkedVector<GameObject*> gameObjects;
+	OctTree<GameObject*> objectTree;
+	size_t boundsWidth;
+	GLFWwindow* window;
 public:
+
 	Scene();
 
 	~Scene();
@@ -21,15 +27,6 @@ public:
 	void UpdateScene();
 
 	void AddObject(GameObject* object);
-
-private:
-
-	Camera* camera;
-	ChunkedVector<GameObject*> gameObjects;
-	// OctTree<GameObject*, 5> objectTree;
-	size_t boundsWidth = OCTTREE_CHUNK_SIZE * glm::pow(2, 5);
-	GLFWwindow* window;
-
 };
 
 

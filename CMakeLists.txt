@@ -14,6 +14,7 @@ file(GLOB PhysvoyantSrc
 	"source/game_objects/*.*"
 	"source/geometry/*.*"
 	"source/interfaces/*.*"
+	"source/math/*.*"
 	"source/renderer/*.*"
 	"source/scene/*.*"
 )

@@ -7,15 +7,16 @@ class GameObject;
 #include INCL_INTERFACES
 #include INCL_DATA_STRUCTURES
 #include INCL_GEOMETRY
+#include <vector>
 
 class GameObject : public IUpdateable
 {
-	ChunkedVector<IComponent*> components;
 public:
+	ComponentContainer<IComponent*, GameObject> components;
 	Transform transform;
 
 	// Constructors
-	GameObject() : components()
+	GameObject() : components(ComponentContainer<IComponent*, GameObject>(this)), transform()
 	{
 
 	}
@@ -27,42 +28,6 @@ public:
 
 	// Inherited via IUpdateable
 	virtual void Update() override;
-
-	// GameObject
-	template <typename T>
-	ChunkedVector<T*> GetComponentsOfType()
-	{
-		ChunkedVector<T*> result;
-		for (int i = 0; i < components.size(); i++)
-		{
-			T* val = dynamic_cast<T*>(components[i]);
-			if (val)
-			{
-				result.push_back(val);
-			}
-		}
-		return result;
-	}
-
-	template <typename T>
-	T GetComponentOfType()
-	{
-		for (int i = 0; i < components.size(); i++)
-		{
-			T val = dynamic_cast<T>(components[i]);
-			if (val)
-			{
-				return val;
-			}
-		}
-		return T();
-	}
-
-	void AddComponent(IComponent* component);
-	void AddComponent(IComponent&& component);
-
-	void RemoveComponents(unsigned long long ID);
-
 };
 
 

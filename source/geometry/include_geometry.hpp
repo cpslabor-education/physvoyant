@@ -2,6 +2,6 @@
 #define GEOMETRY
 
 #include "Transform.hpp"
-#include "Plane.hpp"
+//#include "Plane.hpp"
 
 #endif

@@ -4,6 +4,7 @@
 typedef __int64 intStandard_t;
 typedef unsigned __int64 uintStandard_t;
 typedef double realStandard_t;
+typedef uintStandard_t componentID_t;
 
 // 0: no debug
 // 1: debug
@@ -28,6 +29,7 @@ typedef double realStandard_t;
 #define INCL_GAME_OBJECTS "../game_objects/include_objects.hpp"
 #define INCL_GEOMETRY "../geometry/include_geometry.hpp"
 #define INCL_INTERFACES "../interfaces/include_interfaces.hpp"
+#define INCL_MATH "../math/MovementSolver.hpp"
 #define INCL_RENDERER "../renderer/Renderer.hpp"
 #define INCL_SCENE "../scene/Scene.hpp"
 #define INCL_GLFW <GLFW/glfw3.h>
