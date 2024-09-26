@@ -17,6 +17,7 @@ file(GLOB PhysvoyantSrc
 	"source/math/*.*"
 	"source/renderer/*.*"
 	"source/scene/*.*"
+	"source/scene_components/*.*"
 )
 
 file(GLOB_RECURSE GLFW

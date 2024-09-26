@@ -32,6 +32,7 @@ typedef uintStandard_t componentID_t;
 #define INCL_MATH "../math/MovementSolver.hpp"
 #define INCL_RENDERER "../renderer/Renderer.hpp"
 #define INCL_SCENE "../scene/Scene.hpp"
+#define INCL_SCENE_COMPONENTS "../scene_components/include_scene_components.hpp"
 #define INCL_GLFW <GLFW/glfw3.h>
 #define INCL_GLM <glm/glm.hpp>
 #define INCL_QUATERNION <glm/gtc/quaternion.hpp>
@@ -48,7 +49,7 @@ typedef uintStandard_t componentID_t;
 typedef uintStandard_t timeValue_t;
 
 // 0: second, 1 millisecond, 2 microsecond, 3 nanosecond
-#define TIME_SCALE 2
+#define TIME_SCALE 3
 
 #if TIME_SCALE == 0
 	#define SECOND_UNIT 1.0
@@ -65,6 +66,18 @@ typedef uintStandard_t timeValue_t;
 #else
 	static_assert(false, "Time unit is incorrect in " __FILE__);
 #endif // TIME_SCALE
+
+// 0: steady_clock, 1: high_resolution_clock
+#define USED_CLOCK 1
+
+#if USED_CLOCK == 0
+	#define CLOCK_TYPE std::chrono::steady_clock
+#elif USED_CLOCK == 1
+	#define CLOCK_TYPE std::chrono::high_resolution_clock
+#else
+	static_assert(false, "Time unit is incorrect in " __FILE__);
+#endif // USED_CLOCK
+
 
 #define SECOND 1.0
 #define MILLISECOND 0.001

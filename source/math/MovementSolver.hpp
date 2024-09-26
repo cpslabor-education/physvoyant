@@ -40,7 +40,7 @@ public:
 	}
 
 	// Accuracy
-	static void VerletIntegrationSolver(Transform* transform, realStandard_t deltaTime = 0.0)
+	static void VerletIntegrationSolver(Transform* transform, realStandard_t deltaTime)
 	{
 		//Transform next = *current;
 
@@ -72,7 +72,7 @@ public:
 	//}
 
 
-	static Transform LeapfrogSolver(Transform* transform, realStandard_t deltaTime, size_t n = 2)
+	static void LeapfrogSolver(Transform* transform, realStandard_t deltaTime, uintStandard_t n = 2)
 	{
 		for (size_t i = 0; i < n; i++)
 		{

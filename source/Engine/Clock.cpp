@@ -1,16 +1,20 @@
 #include "Clock.hpp"
 
 
-Clock::Clock() : lastTimePoint(std::chrono::steady_clock::now()), delta(0), physicsTimeStep(0), timeScale(1.0), physicsTimeScale(1.0), currentTimePoint()
+Clock::Clock() : lastTimePoint(CLOCK_TYPE::now()), delta(0), physicsTimeStep(0), timeScale(1.0), physicsTimeScale(1.0), currentTimePoint()
 {
 	
 }
 
-void Clock::Update()
+void Clock::StartMeasure()
 {
-	currentTimePoint = std::chrono::steady_clock::now();
+	lastTimePoint = CLOCK_TYPE::now();
+}
+
+void Clock::SetCurrentTime()
+{
+	currentTimePoint = CLOCK_TYPE::now();
 	delta = std::chrono::duration_cast<TIME_CAST_SIZE>(currentTimePoint - lastTimePoint).count();
-	lastTimePoint = currentTimePoint;
 }
 
 timeValue_t Clock::DeltaTime()

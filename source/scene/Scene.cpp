@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 #include "../defines.hpp"
 
-Scene::Scene() : camera(), gameObjects(), objectTree(), boundsWidth(0), window(nullptr)
+Scene::Scene() : camera(), gameObjects(), window(nullptr), objectTree(), components(this)
 {
 
 }
@@ -12,19 +12,25 @@ Scene::~Scene()
 	{
 		delete gameObjects[i];
 	}
+	for (size_t i = 0; i < components.Count(); i++)
+	{
+		delete components[i];
+	}
+	delete objectTree;
 }
 
 void Scene::UpdateScene()
 {
+	components.UpdateAll();
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->Update();
 	}
-	camera.Update();
+	// camera.Update();
 }
 
 void Scene::AddObject(GameObject* object)
 {
 	gameObjects.push_back(object);
-	objectTree.Insert(object, object->transform.position);
+	objectTree->Insert(object, object->transform.position);
 }

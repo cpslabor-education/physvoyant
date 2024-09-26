@@ -1,6 +1,7 @@
 #include "Engine.hpp"
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 Engine* Engine::instancePtr = nullptr;
 
@@ -22,6 +23,25 @@ void Engine::ErrorCallback(int error, const char* description)
 void Engine::SetActiveScene(Scene* scene)
 {
 	activeScene = scene;
+}
+
+bool Engine::Run()
+{
+	if (activeScene != nullptr)
+	{
+		activeScene->UpdateScene();
+	}
+	return false;
+}
+
+void Engine::Time(uintStandard_t fps)
+{
+	clock.SetCurrentTime();
+	register intStandard_t delta = clock.DeltaTime();
+	register intStandard_t timeToPass = TO_TIME_UNIT(1.0 / fps) - delta;
+	std::this_thread::sleep_for(TIME_CAST_SIZE(timeToPass));
+	clock.SetCurrentTime();
+	clock.StartMeasure();
 }
 
 void Engine::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

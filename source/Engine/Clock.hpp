@@ -5,19 +5,19 @@
 #include "../defines.hpp"
 #include INCL_INTERFACES
 
-class Clock : public IUpdateable
+class Clock
 {
-	std::chrono::steady_clock::time_point lastTimePoint;
+	CLOCK_TYPE::time_point lastTimePoint;
 	timeValue_t delta;
 	timeValue_t physicsTimeStep;
 	realStandard_t timeScale;
 	realStandard_t physicsTimeScale;
-	std::chrono::steady_clock::time_point currentTimePoint;
+	CLOCK_TYPE::time_point currentTimePoint;
 public:
 	Clock();
 
-	// Inherited via IUpdateable
-	void Update() override;
+	void StartMeasure();
+	void SetCurrentTime();
 	timeValue_t DeltaTime(); // Delta time
 	timeValue_t ScaledDeltaTime(); // Delta time
 	timeValue_t PhysicsDeltaTime(); // Delta time for fixed step calculations

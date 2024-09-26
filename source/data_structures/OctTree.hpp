@@ -169,8 +169,10 @@ public:
 		list->push_back(object);
 	}
 
-	void GetNeighbours(VECTOR3& point, std::list<T>* result[])
+	std::vector<std::list<T>*> GetNeighbours(VECTOR3& point)
 	{
+		std::vector<std::list<T>> result;
+		result.reserve((intStandard_t)glm::pow(3, DIMENSIONS));
 		intStandard_t offsets[]{ -((intStandard_t)widthOnLayer[0]), 0, (intStandard_t)widthOnLayer[0] };
 		VECTOR3 local(0);
 		uintStandard_t counter[point.length()];
@@ -193,9 +195,21 @@ public:
 					++(counter[j - 1]);
 				}
 			}
-			uintStandard_t index = 	Find(local);
-			result[i] = GetList(index);
+			uintStandard_t index = Find(local);
+			result.push_back(GetList(index));
 		}
+		return result;
+	}
+
+	bool WithinSameSquare(VECTOR3 point1, VECTOR3 point2)
+	{
+		intStandard_t width = widthOnLayer[0];
+		for (size_t i = 0; i < point1.length(); i++)
+		{
+			point1[i] = ((intStandard_t)point1[i]) / width;
+			point2[i] = ((intStandard_t)point2[i]) / width;
+		}
+		return point1 == point2;
 	}
 
 };

@@ -10,6 +10,10 @@
 
 class Engine
 {
+	Engine();
+	void Initialise();
+	static Engine* instancePtr;
+	Scene* activeScene;
 public:
 	Engine(Engine& other) = delete;
 
@@ -39,6 +43,9 @@ public:
 	void Start();
 	void Stop();
 
+	bool Run();
+	void Time(uintStandard_t fps);
+
 	//int CreateWindow(int width, int height, char* title);
 	//int CreateWindow(int width, int height, const char* title);
 	//void DestroyWindow(int index);
@@ -48,11 +55,6 @@ public:
 	//void FocusWindow(GLFWwindow* window);
 
 	Clock clock;
-private:
-	Engine();
-	void Initialise();
-	static Engine* instancePtr;
-	Scene* activeScene;
 };
 
 

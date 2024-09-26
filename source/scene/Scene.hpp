@@ -13,12 +13,12 @@ class Scene;
 
 class Scene 
 {
-	Camera camera;
-	ChunkedVector<GameObject*> gameObjects;
-	OctTree<GameObject*> objectTree;
-	size_t boundsWidth;
-	GLFWwindow* window;
 public:
+	Camera camera;
+	std::vector<GameObject*> gameObjects;
+	GLFWwindow* window;
+	OctTree<GameObject*>* objectTree;
+	ComponentContainer<ISceneComponent*, Scene> components;
 
 	Scene();
 
