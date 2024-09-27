@@ -32,6 +32,9 @@ void* ObjectMover::Execute(Scene* caller, void* params)
 			case MovementSolver::Solvers::Leapfrog:
 				MovementSolver::LeapfrogSolver(&(helper[i]->transform), deltaTime, leapfrogSteps);
 				break;
+			case MovementSolver::Solvers::RungeKutta4:
+				MovementSolver::RungeKutta4(&(helper[i]->transform), deltaTime);
+				break;
 			case MovementSolver::Solvers::EndOfSolvers:
 			default:
 				Engine::WriteInfo("No solver selected at" __FILE__ + __LINE__);

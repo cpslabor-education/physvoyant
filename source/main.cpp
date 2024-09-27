@@ -22,6 +22,7 @@
 int main()
 {
 	Engine* e = Engine::GetInstance();
+	e->clock.SetPhysicsTimeStep(TO_TIME_UNIT(MILLISECOND));
 
 	Scene* scene = new Scene();
 	scene->objectTree = new OctTree<GameObject*>(VECTOR3(0), 5, 8);
@@ -31,23 +32,19 @@ int main()
 	scene->AddObject(tmp);
 
 	ObjectMover* mover = new ObjectMover();
-	mover->solverType = MovementSolver::Solvers::Leapfrog;
+	mover->solverType = MovementSolver::Solvers::RungeKutta4;
 	mover->leapfrogSteps = 2;
 	scene->components.AddComponent<ObjectMover*>(mover);
 	delete mover;
 
 	e->SetActiveScene(scene);
 
-	for (int i = 0; i < 10000; i++)
+	for (int i = 0; i < 100000; i++)
 	{
 		e->Run();
-		_sleep(100); // imaginary load
-		realStandard_t time = TO_SECOND(e->clock.DeltaTime());
-		e->Time(10);
-		e->WriteInfo(time);
 	}
 
-
+	scene->gameObjects[0]->transform.position;
 
 
 

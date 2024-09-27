@@ -10,6 +10,17 @@ class MovementSolver;
 
 class MovementSolver
 {
+
+	inline static VECTOR3 ApplyDelta(VECTOR3 original, VECTOR3 delta, realStandard_t deltaTime)
+	{
+		return original + delta * deltaTime;
+	}
+
+	inline static QUATERNION ApplyRotationDelta(QUATERNION original, QUATERNION angularVelocity, realStandard_t deltaTime)
+	{
+		return glm::normalize(original + angularVelocity * deltaTime);
+	}
+
 public:
 
 	enum class Solvers
@@ -18,25 +29,26 @@ public:
 		SemiImplicitEuler,
 		VerletIntegration,
 		Leapfrog,
+		RungeKutta4,
 		EndOfSolvers
 	};
 
 	static void ExplicitEulerSolver(Transform* transform, realStandard_t deltaTime)
 	{
-		transform->position += transform->velocity * deltaTime;
-		transform->rotation += transform->angularVelocity * deltaTime;
+		transform->position = ApplyDelta(transform->position, transform->velocity, deltaTime);
+		transform->rotation = ApplyRotationDelta(transform->rotation, transform->angularVelocity, deltaTime);
 
-		transform->velocity += transform->acceleration * deltaTime;
-		transform->angularVelocity += transform->angularAcceleration * deltaTime;
+		transform->velocity = ApplyDelta(transform->velocity, transform->acceleration, deltaTime);
+		transform->angularVelocity = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration, deltaTime);
 	}
 
 	static void SemiImplicitEulerSolver(Transform* transform, realStandard_t deltaTime)
 	{
-		transform->velocity += transform->acceleration * deltaTime;
-		transform->angularVelocity += transform->angularAcceleration * deltaTime;
+		transform->velocity = ApplyDelta(transform->velocity, transform->acceleration, deltaTime);
+		transform->angularVelocity = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration, deltaTime);
 
-		transform->position += transform->velocity * deltaTime;
-		transform->rotation += transform->angularVelocity * deltaTime;
+		transform->position = ApplyDelta(transform->position, transform->velocity, deltaTime);
+		transform->rotation = ApplyRotationDelta(transform->rotation, transform->angularVelocity, deltaTime);
 	}
 
 	// Accuracy
@@ -58,18 +70,23 @@ public:
 
 
 	//https://hu.wikipedia.org/wiki/Runge%E2%80%93Kutta-m%C3%B3dszer
-	//static Transform RungeKutta4(Transform* transform, realStandard_t deltaTime = 0.0)
-	//{
-	//	Transform initial = *transform;
-	//	Transform k1 = transform->Derive();
-	//	
-	//	transform->position += (k1.position + 2.0 * k2.position + 2.0 * k3.position + k4.position) / 6.0;
-	//	transform->velocity += (k1.velocity + 2.0 * k2.velocity + 2.0 * k3.velocity + k4.velocity) / 6.0;
-	//	transform->acceleration = VECTOR3(0.0); // (k1.acceleration + 2.0 * k2.acceleration + 2.0 * k3.acceleration + k4.acceleration) / 6.0;
-	//	transform->rotation += (k1.rotation + 2.0 * k2.rotation + 2.0 * k3.rotation + k4.rotation) / 6.0;
-	//	transform->angularVelocity += (k1.angularVelocity + 2.0 * k2.angularVelocity + 2.0 * k3.angularVelocity + k4.angularVelocity) / 6.0;
-	//	transform->angularAcceleration = glm::identity<QUATERNION>(); // (k1.angularAcceleration + 2.0 * k2.angularAcceleration + 2.0 * k3.angularAcceleration + k4.angularAcceleration) / 6.0;
-	//}
+	static void RungeKutta4(Transform* transform, realStandard_t deltaTime)
+	{
+		VECTOR3 k1 = transform->velocity;
+		QUATERNION q1 = transform->angularVelocity;
+
+		VECTOR3 k2 = ApplyDelta(transform->velocity, transform->acceleration + k1 * deltaTime / 2.0, deltaTime / 2.0);
+		QUATERNION q2 = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration + q1 * deltaTime / 2.0, deltaTime / 2.0);
+
+		VECTOR3 k3 = ApplyDelta(transform->velocity, transform->acceleration + k2 * deltaTime / 2.0, deltaTime / 2.0);
+		QUATERNION q3 = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration + q2 * deltaTime / 2.0, deltaTime / 2.0);
+
+		VECTOR3 k4 = ApplyDelta(transform->velocity, transform->acceleration + k3 * deltaTime, deltaTime);
+		QUATERNION q4 = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration + q3 * deltaTime / 2.0, deltaTime / 2.0);
+
+		transform->position = ApplyDelta(transform->position, (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0,  deltaTime);
+		transform->rotation = ApplyRotationDelta(transform->rotation, (q1 + 2.0 * q2 + 2.0 * q3 + q4) / 6.0,  deltaTime);
+	}
 
 
 	static void LeapfrogSolver(Transform* transform, realStandard_t deltaTime, uintStandard_t n = 2)
