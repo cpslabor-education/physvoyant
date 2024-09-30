@@ -84,8 +84,8 @@ public:
 		VECTOR3 k4 = ApplyDelta(transform->velocity, transform->acceleration + k3 * deltaTime, deltaTime);
 		QUATERNION q4 = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration + q3 * deltaTime / 2.0, deltaTime / 2.0);
 
-		transform->position = ApplyDelta(transform->position, (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0,  deltaTime);
-		transform->rotation = ApplyRotationDelta(transform->rotation, (q1 + 2.0 * q2 + 2.0 * q3 + q4) / 6.0,  deltaTime);
+		transform->position = ApplyDelta(transform->position, (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0, deltaTime);
+		transform->rotation = ApplyRotationDelta(transform->rotation, (q1 + 2.0 * q2 + 2.0 * q3 + q4) / 6.0, deltaTime);
 	}
 
 

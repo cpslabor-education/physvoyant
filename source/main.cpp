@@ -22,29 +22,18 @@
 int main()
 {
 	Engine* e = Engine::GetInstance();
-	e->clock.SetPhysicsTimeStep(TO_TIME_UNIT(MILLISECOND));
+	e->clock.SetPhysicsTimeStep(TO_TIME_UNIT(0.1));
+	e->SetFPS(20);
 
-	Scene* scene = new Scene();
-	scene->objectTree = new OctTree<GameObject*>(VECTOR3(0), 5, 8);
+	e->SetActiveScene(SceneFactory::SpheresCollide());
 
-	GameObject* tmp = new GameObject();
-	tmp->transform.velocity = VECTOR3(1);
-	scene->AddObject(tmp);
-
-	ObjectMover* mover = new ObjectMover();
-	mover->solverType = MovementSolver::Solvers::RungeKutta4;
-	mover->leapfrogSteps = 2;
-	scene->components.AddComponent<ObjectMover*>(mover);
-	delete mover;
-
-	e->SetActiveScene(scene);
-
-	for (int i = 0; i < 100000; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		e->Run();
+		e->Time();
 	}
 
-	scene->gameObjects[0]->transform.position;
+
 
 
 

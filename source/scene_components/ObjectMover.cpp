@@ -40,7 +40,7 @@ void* ObjectMover::Execute(Scene* caller, void* params)
 				Engine::WriteInfo("No solver selected at" __FILE__ + __LINE__);
 				break;
 		}
-		if (!caller->objectTree->WithinSameSquare(helper[i]->transform.position, previous.position))
+		if (caller->objectTree != nullptr && (!caller->objectTree->WithinSameSquare(helper[i]->transform.position, previous.position)))
 		{
 			caller->objectTree->MoveItem(caller->objectTree->Find(previous.position), helper[i], caller->objectTree->Find(helper[i]->transform.position));
 		}

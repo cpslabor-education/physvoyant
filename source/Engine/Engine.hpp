@@ -14,7 +14,9 @@ class Engine
 	void Initialise();
 	static Engine* instancePtr;
 	Scene* activeScene;
+	uintStandard_t fps;
 public:
+	Clock clock;
 	Engine(Engine& other) = delete;
 
 	void operator=(const Engine& other) = delete;
@@ -44,7 +46,7 @@ public:
 	void Stop();
 
 	bool Run();
-	void Time(uintStandard_t fps);
+	void Time(uintStandard_t fps = 0);
 
 	//int CreateWindow(int width, int height, char* title);
 	//int CreateWindow(int width, int height, const char* title);
@@ -54,7 +56,15 @@ public:
 	//void FocusWindow(int index);
 	//void FocusWindow(GLFWwindow* window);
 
-	Clock clock;
+	uintStandard_t GetFPS() const
+	{
+		return fps;
+	}
+
+	void SetFPS(const uintStandard_t& value)
+	{
+		fps = value;
+	}
 };
 
 

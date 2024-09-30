@@ -36,6 +36,10 @@ bool Engine::Run()
 
 void Engine::Time(uintStandard_t fps)
 {
+	if (fps == 0)
+	{
+		fps = this->fps;
+	}
 	clock.SetCurrentTime();
 	register intStandard_t delta = clock.DeltaTime();
 	register intStandard_t timeToPass = TO_TIME_UNIT(1.0 / fps) - delta;

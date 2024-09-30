@@ -6,10 +6,12 @@ class SceneFactory;
 #include "../defines.hpp"
 #include INCL_SCENE
 
-static class SceneFactory
+class SceneFactory
 {
 public:
 	static Scene* GetDefaultScene();
+	static Scene* FloatingShpehere();
+	static Scene* SpheresCollide();
 };
 
 

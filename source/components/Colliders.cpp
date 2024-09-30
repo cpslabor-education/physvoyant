@@ -32,9 +32,14 @@ VECTOR3 SphereCollider::CollideWith(GameObject* caller, GameObject* other)
 		SphereCollider* otherSphere = dynamic_cast<SphereCollider*> (otherCollider);
 		if (otherSphere->radius + this->radius >= glm::distance(caller->transform.position, other->transform.position))
 		{
-			result = glm::normalize(caller->transform.position - other->transform.position);
+			result = glm::normalize(other->transform.position - caller->transform.position);
 			return result;
 		}
+	}
+	else if (dynamic_cast<SquareCollider*> (otherCollider))
+	{
+		SquareCollider* otherSphere = dynamic_cast<SquareCollider*> (otherCollider);
+		// TODO: CAlculate teh closest point to sphere
 	}
 	return result;
 }
@@ -44,7 +49,7 @@ VECTOR3 SphereCollider::CollideWith(GameObject* caller, VECTOR3* point)
 	VECTOR3 result(0, 0, 0);
 	if (this->radius >= glm::distance(caller->transform.position, *point))
 	{
-		result = glm::normalize(caller->transform.position - *point);
+		result = glm::normalize(*point - caller->transform.position);
 	}
 	return result;
 }

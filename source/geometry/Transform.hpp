@@ -24,7 +24,7 @@ public:
 	// TODO: apply force, apply motion
 
 	// Constructors
-	Transform()	: position(0), velocity(0), acceleration(0), rotation(glm::identity<QUATERNION>()), angularVelocity(glm::identity<QUATERNION>()), angularAcceleration(glm::identity<QUATERNION>()), mass(0)
+	Transform() : position(0), velocity(0), acceleration(0), rotation(glm::identity<QUATERNION>()), angularVelocity(glm::identity<QUATERNION>()), angularAcceleration(glm::identity<QUATERNION>()), mass(0)
 	{
 	}
 
@@ -43,20 +43,13 @@ public:
 	bool operator!=(const Transform& other) const;
 
 
-	void ApplyForce(VECTOR3 force);
-	void ApplyForce(VECTOR3 forceNormal, realStandard_t strength);
-	void ApplyRotation(QUATERNION rotation);
-
-	Transform Derive()
+	void ApplyForce(VECTOR3 force)
 	{
-		Transform result;
-		result.position = this->velocity;
-		result.velocity = this->acceleration;
-		result.acceleration = VECTOR3(0);
-		result.rotation = this->angularVelocity;
-		result.angularVelocity = this->angularAcceleration;
-		result.angularAcceleration = glm::identity<QUATERNION>();
-		return result;
+		acceleration += force;
+	}
+	void ApplyForce(VECTOR3 forceNormal, realStandard_t strength)
+	{
+		acceleration += glm::normalize(forceNormal) * strength;
 	}
 };
 

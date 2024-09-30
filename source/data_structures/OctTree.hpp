@@ -138,7 +138,7 @@ public:
 				}
 			}
 			localCenter = newCenter;
-			realIndex = (realIndex << point.length()) + index;  // This is some serious black magic right here...
+			realIndex = (realIndex << point.length()) | index;  // This is some serious black magic right here...
 			index = 0;
 		}
 		return realIndex;

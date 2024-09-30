@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 #include "../defines.hpp"
 
-Scene::Scene() : camera(), gameObjects(), window(nullptr), objectTree(), components(this)
+Scene::Scene() : camera(), gameObjects(), window(nullptr), objectTree(nullptr), components(this)
 {
 
 }

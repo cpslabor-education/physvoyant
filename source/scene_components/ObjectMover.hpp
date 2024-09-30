@@ -1,5 +1,5 @@
-#ifndef PHYSICS_CALCULATOR
-#define PHYSICS_CALCULATOR
+#ifndef OBJECTS_MOVER
+#define OBJECTS_MOVER
 
 #include "../defines.hpp"
 #include INCL_INTERFACES
