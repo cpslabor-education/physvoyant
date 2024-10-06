@@ -11,6 +11,7 @@ public:
 	void* Execute(GameObject* caller, void* params = nullptr);
 	IComponent* Clone(void* params = nullptr) const;
 	componentID_t GetID();
+	void SetID(componentID_t ID);
 };
 
 #endif

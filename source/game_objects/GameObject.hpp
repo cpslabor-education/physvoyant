@@ -12,14 +12,11 @@ class GameObject;
 class GameObject : public IUpdateable
 {
 public:
-	ComponentContainer<IComponent*, GameObject> components;
+	ComponentContainer<IComponent*> components;
 	Transform transform;
 
 	// Constructors
-	GameObject() : components(ComponentContainer<IComponent*, GameObject>(this)), transform()
-	{
-
-	}
+	GameObject();
 	GameObject(const GameObject& other);
 	GameObject(GameObject&& other);
 

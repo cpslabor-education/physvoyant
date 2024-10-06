@@ -18,7 +18,7 @@ public:
 	std::vector<GameObject*> gameObjects;
 	GLFWwindow* window;
 	OctTree<GameObject*>* objectTree;
-	ComponentContainer<ISceneComponent*, Scene> components;
+	ComponentContainer<ISceneComponent*> components;
 
 	Scene();
 

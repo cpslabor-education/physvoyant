@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 #include "../defines.hpp"
 
-Scene::Scene() : camera(), gameObjects(), window(nullptr), objectTree(nullptr), components(this)
+Scene::Scene() : camera(), gameObjects(), window(nullptr), objectTree(nullptr), components()
 {
 
 }
@@ -21,7 +21,7 @@ Scene::~Scene()
 
 void Scene::UpdateScene()
 {
-	components.UpdateAll();
+	components.UpdateAll(this);
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->Update();

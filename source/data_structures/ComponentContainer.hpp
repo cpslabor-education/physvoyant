@@ -7,17 +7,12 @@
 #include <vector>
 
 template
-<typename T, typename Parent>
+<typename T>
 class ComponentContainer
 {
 	std::vector<T> components;
-	Parent* parent;
 public:
-	ComponentContainer() : components(), parent(nullptr)
-	{
-
-	}
-	ComponentContainer(Parent* parent) : components(), parent(parent)
+	ComponentContainer() : components()
 	{
 
 	}
@@ -88,7 +83,8 @@ public:
 	void RemoveComponent(componentID_t ID);
 	void RemoveComponent(T component);
 
-	void UpdateAll(void* params = nullptr)
+	template <typename Parent>
+	void UpdateAll(Parent* parent, void* params = nullptr)
 	{
 		for (size_t i = 0; i < components.size(); i++)
 		{

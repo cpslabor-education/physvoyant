@@ -44,6 +44,7 @@ void* ObjectMover::Execute(Scene* caller, void* params)
 		{
 			caller->objectTree->MoveItem(caller->objectTree->Find(previous.position), helper[i], caller->objectTree->Find(helper[i]->transform.position));
 		}
+		helper[i]->transform.acceleration = VECTOR3(0);
 	}
 	return nullptr;
 }

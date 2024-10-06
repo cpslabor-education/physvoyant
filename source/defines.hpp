@@ -29,7 +29,7 @@ typedef uintStandard_t componentID_t;
 #define INCL_GAME_OBJECTS "../game_objects/include_objects.hpp"
 #define INCL_GEOMETRY "../geometry/include_geometry.hpp"
 #define INCL_INTERFACES "../interfaces/include_interfaces.hpp"
-#define INCL_MATH "../math/MovementSolver.hpp"
+#define INCL_MATH "../math/include_math.hpp"
 #define INCL_RENDERER "../renderer/Renderer.hpp"
 #define INCL_SCENE "../scene/include_scene.hpp"
 #define INCL_SCENE_COMPONENTS "../scene_components/include_scene_components.hpp"

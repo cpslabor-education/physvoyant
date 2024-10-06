@@ -1,5 +1,10 @@
 #include "GameObject.hpp"
 
+GameObject::GameObject() : components(ComponentContainer<IComponent*>()), transform()
+{
+
+}
+
 GameObject::~GameObject()
 {
 	for (size_t i = 0; i < components.Count(); i++)
@@ -10,11 +15,5 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	for (size_t i = 0; i < components.Count(); i++)
-	{
-		if (components[i] != nullptr)
-		{
-			components[i]->Execute(this);
-		}
-	}
+	components.UpdateAll(this);
 }

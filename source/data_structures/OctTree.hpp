@@ -39,9 +39,9 @@ public:
 	{
 
 	}
-	OctTree(VECTOR3& center, uintStandard_t depth, uintStandard_t chunkSize) : center(center), widthOnLayer(nullptr), depth(depth), elements()
+	OctTree(VECTOR3& center, uintStandard_t depth, uintStandard_t chunkSize) : center(center), widthOnLayer(nullptr), depth(depth), elements(glm::sqrt(1 << (DIMENSIONS * depth)))
 	{
-		assert(depth <= 9);
+		assert(depth - 1 < 9);
 		assert(chunkSize % 2 == 0);
 		widthOnLayer = new uintStandard_t[this->depth];
 		NULL_CHECK(widthOnLayer);
@@ -49,7 +49,7 @@ public:
 		{
 			widthOnLayer[i] = chunkSize * ((size_t)1 << i);
 		}
-		uintStandard_t totalLeafs = glm::pow(8, depth);
+		uintStandard_t totalLeafs = (uintStandard_t)1 << (DIMENSIONS * depth);
 		for (size_t i = 0; i < totalLeafs; i++)
 		{
 			elements.push_back(nullptr);
@@ -131,7 +131,8 @@ public:
 			for (size_t j = 0; j < point.length(); j++)
 			{
 				newCenter[j] += widthOnLayer[i] >> 1;
-				if (point[j] - localCenter[j] < 0)
+				realStandard_t tmp = point[j] - localCenter[j];
+				if (tmp < 0)
 				{
 					newCenter[j] -= widthOnLayer[i];
 					index |= (1 << point.length() - 1 - j);
@@ -142,6 +143,30 @@ public:
 			index = 0;
 		}
 		return realIndex;
+	}
+
+	uintStandard_t Find2(VECTOR3 point)
+	{
+		// Not functioning
+		point = point - center;
+		intStandard_t width = widthOnLayer[depth - 1] * 2;
+		VECTOR3 min(-width);
+		VECTOR3 max(width);
+		point = glm::clamp(point, min, max);
+
+		VECTOR3 norm(0);
+		for (size_t i = 0; i < point.length(); i++)
+		{
+			norm[i] = ((point[i] - min[i]) / (max[i] - min[i]));
+		}
+
+		uintStandard_t index = 0;
+		for (int i = point.length() - 1; i >= 0; i--)
+		{
+			uintStandard_t tmp = glm::pow(width, i);
+			index += norm[i] * tmp;
+		}
+		return index;
 	}
 
 	uintStandard_t Find(VECTOR3& point, std::list<T>** result)
@@ -171,7 +196,7 @@ public:
 
 	std::vector<std::list<T>*> GetNeighbours(VECTOR3& point)
 	{
-		std::vector<std::list<T>> result;
+		std::vector<std::list<T>*> result;
 		result.reserve((intStandard_t)glm::pow(3, DIMENSIONS));
 		intStandard_t offsets[]{ -((intStandard_t)widthOnLayer[0]), 0, (intStandard_t)widthOnLayer[0] };
 		VECTOR3 local(0);
@@ -195,8 +220,7 @@ public:
 					++(counter[j - 1]);
 				}
 			}
-			uintStandard_t index = Find(local);
-			result.push_back(GetList(index));
+			result.push_back(GetList(Find(local)));
 		}
 		return result;
 	}

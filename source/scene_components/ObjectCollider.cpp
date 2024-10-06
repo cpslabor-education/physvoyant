@@ -19,17 +19,10 @@ void* ObjectCollider::Execute(Scene* caller, void* params)
 				ICollider* inCollider = in->components.GetComponent<ICollider*>();
 				if (inCollider == nullptr)
 				{
+					// No collider
 					continue;
 				}
-				VECTOR3 inResult = VECTOR3(0);
-				if (dynamic_cast<SphereCollider*>(inCollider))
-				{
-					inResult = dynamic_cast<SphereCollider*>(inCollider)->CollideWith(in, out);
-				}
-				else if (dynamic_cast<SquareCollider*>(inCollider))
-				{
-					inResult = dynamic_cast<SquareCollider*>(inCollider)->CollideWith(in, out);
-				}
+				VECTOR3 inResult = inCollider->CollideWith(in, out);
 				if (inResult == VECTOR3(0))
 				{
 					// no collision
@@ -38,7 +31,7 @@ void* ObjectCollider::Execute(Scene* caller, void* params)
 				else
 				{
 					// collision
-					in->transform.ApplyForce(inResult);
+					in->transform.ApplyForce(-inResult);
 					out->transform.ApplyForce(inResult);
 				}
 			}
