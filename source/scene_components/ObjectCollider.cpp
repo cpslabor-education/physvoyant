@@ -22,7 +22,7 @@ void* ObjectCollider::Execute(Scene* caller, void* params)
 					// No collider
 					continue;
 				}
-				VECTOR3 inResult = inCollider->CollideWith(in, out);
+				VECTOR3 inResult = inCollider->CollideWith(*in, *out);
 				if (inResult == VECTOR3(0))
 				{
 					// no collision

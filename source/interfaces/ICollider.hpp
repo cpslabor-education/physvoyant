@@ -2,6 +2,7 @@
 #define ICOLLIDER
 
 class GameObject;
+class PosRot;
 
 #include "../defines.hpp"
 #include INCL_GLM
@@ -15,8 +16,8 @@ public:
 	/// <param name="caller">The parent of the collider (should be "this")</param>
 	/// <param name="other">The other object to check for collision</param>
 	/// <returns>The direction of collsion</returns>
-	VECTOR3 CollideWith(GameObject* caller, GameObject* other);
-	VECTOR3 CollideWith(GameObject* caller, VECTOR3& point);
+	VECTOR3 CollideWith(GameObject& caller, GameObject& other);
+	VECTOR3 CollideWith(PosRot& center, VECTOR3& point);
 };
 
 #endif

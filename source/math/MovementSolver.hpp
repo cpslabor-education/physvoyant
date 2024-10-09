@@ -37,20 +37,20 @@ public:
 
 	static void ExplicitEulerSolver(Transform* transform, realStandard_t deltaTime)
 	{
-		transform->position = ApplyDelta(transform->position, transform->velocity, deltaTime);
-		transform->rotation = ApplyRotationDelta(transform->rotation, transform->angularVelocity, deltaTime);
+		transform->position.vector = ApplyDelta(transform->position.vector, transform->velocity.vector, deltaTime);
+		transform->position.rotation = ApplyRotationDelta(transform->position.rotation, transform->velocity.rotation, deltaTime);
 
-		transform->velocity = ApplyDelta(transform->velocity, transform->acceleration, deltaTime);
-		transform->angularVelocity = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration, deltaTime);
+		transform->velocity.vector = ApplyDelta(transform->velocity.vector, transform->acceleration.vector, deltaTime);
+		transform->velocity.rotation = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation, deltaTime);
 	}
 
 	static void SemiImplicitEulerSolver(Transform* transform, realStandard_t deltaTime)
 	{
-		transform->velocity = ApplyDelta(transform->velocity, transform->acceleration, deltaTime);
-		transform->angularVelocity = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration, deltaTime);
+		transform->velocity.vector = ApplyDelta(transform->velocity.vector, transform->acceleration.vector, deltaTime);
+		transform->velocity.rotation = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation, deltaTime);
 
-		transform->position = ApplyDelta(transform->position, transform->velocity, deltaTime);
-		transform->rotation = ApplyRotationDelta(transform->rotation, transform->angularVelocity, deltaTime);
+		transform->position.vector = ApplyDelta(transform->position.vector, transform->velocity.vector, deltaTime);
+		transform->position.rotation = ApplyRotationDelta(transform->position.rotation, transform->velocity.rotation, deltaTime);
 	}
 
 	// Accuracy
@@ -74,26 +74,26 @@ public:
 	//https://hu.wikipedia.org/wiki/Runge%E2%80%93Kutta-m%C3%B3dszer
 	static void RungeKutta4(Transform* transform, realStandard_t deltaTime)
 	{
-		VECTOR3 k1 = transform->velocity;
-		QUATERNION q1 = transform->angularVelocity;
+		VECTOR3 k1 = transform->velocity.vector;
+		QUATERNION q1 = transform->velocity.rotation;
 
-		VECTOR3 k2 = ApplyDelta(transform->velocity, transform->acceleration + k1 * deltaTime / 2.0, deltaTime / 2.0);
-		QUATERNION q2 = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration + q1 * deltaTime / 2.0, deltaTime / 2.0);
+		VECTOR3 k2 = ApplyDelta(transform->velocity.vector, transform->acceleration.vector + k1 * deltaTime / 2.0, deltaTime / 2.0);
+		QUATERNION q2 = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation + q1 * deltaTime / 2.0, deltaTime / 2.0);
 
-		VECTOR3 k3 = ApplyDelta(transform->velocity, transform->acceleration + k2 * deltaTime / 2.0, deltaTime / 2.0);
-		QUATERNION q3 = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration + q2 * deltaTime / 2.0, deltaTime / 2.0);
+		VECTOR3 k3 = ApplyDelta(transform->velocity.vector, transform->acceleration.vector + k2 * deltaTime / 2.0, deltaTime / 2.0);
+		QUATERNION q3 = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation + q2 * deltaTime / 2.0, deltaTime / 2.0);
 
-		VECTOR3 k4 = ApplyDelta(transform->velocity, transform->acceleration + k3 * deltaTime, deltaTime);
-		QUATERNION q4 = ApplyRotationDelta(transform->angularVelocity, transform->angularAcceleration + q3 * deltaTime / 2.0, deltaTime / 2.0);
+		VECTOR3 k4 = ApplyDelta(transform->velocity.vector, transform->acceleration.vector + k3 * deltaTime, deltaTime);
+		QUATERNION q4 = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation + q3 * deltaTime / 2.0, deltaTime / 2.0);
 
 		VECTOR3 delta = (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0 * deltaTime;
 		QUATERNION deltaRotation = (q1 + 2.0 * q2 + 2.0 * q3 + q4) / 6.0 * deltaTime;
 
-		transform->position = ApplyDelta(transform->position, delta, deltaTime);
-		transform->rotation = ApplyRotationDelta(transform->rotation, deltaRotation, deltaTime);
+		transform->position.vector = ApplyDelta(transform->position.vector, delta, deltaTime);
+		transform->position.rotation = ApplyRotationDelta(transform->position.rotation, deltaRotation, deltaTime);
 
-		transform->velocity = delta;
-		transform->angularVelocity = deltaRotation;
+		transform->velocity.vector = delta;
+		transform->velocity.rotation = deltaRotation;
 	}
 
 

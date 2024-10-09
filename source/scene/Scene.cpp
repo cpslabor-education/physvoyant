@@ -32,5 +32,5 @@ void Scene::UpdateScene()
 void Scene::AddObject(GameObject* object)
 {
 	gameObjects.push_back(object);
-	objectTree->Insert(object, object->transform.position);
+	objectTree->Insert(object, object->transform.position.vector);
 }

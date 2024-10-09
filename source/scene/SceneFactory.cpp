@@ -10,7 +10,7 @@ Scene* SceneFactory::FloatingShpehere()
 
 	SphereCollider* c = new SphereCollider(1);
 	GameObject* tmp = new GameObject();
-	tmp->transform.velocity = VECTOR3(0.1);
+	tmp->transform.velocity.vector = VECTOR3(0.1);
 	tmp->components.AddComponent<SphereCollider*>(c);
 	scene->AddObject(tmp);
 	delete c;
@@ -44,14 +44,14 @@ Scene* SceneFactory::SpheresCollide()
 	SphereCollider* c = new SphereCollider(1);
 
 	GameObject* tmp = new GameObject();
-	tmp->transform.velocity = VECTOR3(0, 0.1, 0);
-	tmp->transform.position = VECTOR3(0, -5, 0);
+	tmp->transform.velocity.vector = VECTOR3(0, 0.1, 0);
+	tmp->transform.position.vector = VECTOR3(0, -5, 0);
 	tmp->components.AddComponent<SphereCollider*>(c);
 	scene->AddObject(tmp);
 
 	tmp = new GameObject();
-	tmp->transform.velocity = VECTOR3(0, -0.1, 0);
-	tmp->transform.position = VECTOR3(0, 5, 0);
+	tmp->transform.velocity.vector = VECTOR3(0, -0.1, 0);
+	tmp->transform.position.vector = VECTOR3(0, 5, 0);
 	tmp->components.AddComponent<SphereCollider*>(c);
 	scene->AddObject(tmp);
 

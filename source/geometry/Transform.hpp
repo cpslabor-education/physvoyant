@@ -4,27 +4,22 @@
 class Transform;
 
 #include "../defines.hpp"
-#include INCL_GLM
-#define GLM_FORCE_QUAT_DATA_WXYZ
-#include INCL_QUATERNION
+#include "PosRot.hpp"
 
 
 class Transform
 {
 public:
-	VECTOR3 position;
-	VECTOR3 velocity;
-	VECTOR3 acceleration;
+	PosRot position;
+	PosRot velocity;
+	PosRot acceleration;
 
-	QUATERNION rotation;
-	QUATERNION angularVelocity;
-	QUATERNION angularAcceleration;
 	realStandard_t mass;
 
 	// TODO: apply force, apply motion
 
 	// Constructors
-	Transform() : position(0), velocity(0), acceleration(0), rotation(glm::identity<QUATERNION>()), angularVelocity(glm::identity<QUATERNION>()), angularAcceleration(glm::identity<QUATERNION>()), mass(0)
+	Transform() : position(), velocity(), acceleration()
 	{
 	}
 
@@ -45,11 +40,11 @@ public:
 
 	void ApplyForce(VECTOR3 force)
 	{
-		acceleration += force;
+		acceleration.vector += force;
 	}
 	void ApplyForce(VECTOR3 forceNormal, realStandard_t strength)
 	{
-		acceleration += glm::normalize(forceNormal) * strength;
+		acceleration.vector += glm::normalize(forceNormal) * strength;
 	}
 };
 

@@ -22,69 +22,58 @@ public:
 	ColliderBase(realStandard_t layer, uintStandard_t ID = 0) : layer(layer), ID(ID) {};
 	virtual ~ColliderBase() = default;
 
+	virtual componentID_t GetID() override { return ID; }
+	virtual void SetID(componentID_t ID) override { this->ID = ID; }
+	virtual uintStandard_t GetLayer() { return layer; }
+	virtual void Setlayer(uintStandard_t layer) { this->layer = layer; }
+
 	// Inherited via ICollider
 	virtual void* Execute(GameObject* caller, void* params) = 0;
 	virtual IComponent* Clone(void* params) const = 0;
-	virtual componentID_t GetID() override { return ID; }
-	virtual void SetID(componentID_t ID) override { this->ID = ID; }
-	virtual VECTOR3 CollideWith(GameObject* caller, GameObject* other) = 0;
-	virtual VECTOR3 CollideWith(GameObject* caller, VECTOR3& point) = 0;
-	virtual VECTOR3 CollideWith(VECTOR3& center, VECTOR3& point) = 0;
-	virtual bool IsInside(VECTOR3& center, VECTOR3& point) = 0;
-	virtual VECTOR3 GetClosestPoint(VECTOR3& center, VECTOR3& point) = 0;
+	virtual VECTOR3 CollideWith(GameObject& caller, GameObject& other) = 0;
+	virtual VECTOR3 CollideWith(PosRot& center, VECTOR3& point) = 0;
+	virtual VECTOR3 GetClosestPoint(PosRot& center, VECTOR3& point) = 0;
 };
 
 class SphereCollider : public ColliderBase
 {
 	realStandard_t radius;
-	VECTOR3 CollideWithSphere(GameObject* caller, GameObject* other, SphereCollider* otherCollider);
-	VECTOR3 CollideWithSquare(GameObject* caller, GameObject* other, SquareCollider* otherCollider);
+	VECTOR3 CollideWithSphere(PosRot& center, PosRot& otherCenter, SphereCollider* otherCollider);
+	VECTOR3 CollideWithSquare(PosRot& center, PosRot& otherCenter, SquareCollider* otherCollider);
 public:
-	SphereCollider();
-	SphereCollider(const realStandard_t radius);
-	~SphereCollider();
-
-	// Inherited via ICollider
-	void* Execute(GameObject* caller, void* params) override;
-	IComponent* Clone(void* params) const override;
-	VECTOR3 CollideWith(GameObject* caller, GameObject* other) override;
-	VECTOR3 CollideWith(GameObject* caller, VECTOR3& point) override;
-	VECTOR3 CollideWith(VECTOR3& center, VECTOR3& point) override;
-	bool IsInside(VECTOR3& center, VECTOR3& point) override;
-	VECTOR3 GetClosestPoint(VECTOR3& center, VECTOR3& point) override;
+	SphereCollider(const realStandard_t radius = 0) : radius(radius) {};
+	~SphereCollider() = default;
 
 	realStandard_t GetRaduis() { return radius; }
 	void SetRadius(realStandard_t raduis) { this->radius = radius; }
 
-	uintStandard_t GetLayer() { return layer; }
-	void Setlayer(uintStandard_t layer) { this->layer = layer; }
+	// Inherited via ColliderBase
+	void* Execute(GameObject* caller, void* params) override;
+	IComponent* Clone(void* params) const override;
+	VECTOR3 CollideWith(GameObject& caller, GameObject& other) override;
+	VECTOR3 CollideWith(PosRot& center, VECTOR3& point) override;
+	VECTOR3 GetClosestPoint(PosRot& center, VECTOR3& point) override;
 };
 
 class SquareCollider : public ColliderBase
 {
 	VECTOR3 sides;
-	QUATERNION orientation;
-	VECTOR3 CollideWithSphere(GameObject* caller, GameObject* other, SphereCollider* otherCollider);
-	VECTOR3 CollideWithSquare(GameObject* caller, GameObject* other, SquareCollider* otherCollider);
+	VECTOR3 CollideWithSphere(PosRot& center, PosRot& otherCenter, SphereCollider* otherCollider);
+	VECTOR3 CollideWithSquare(PosRot& center, PosRot& otherCenter, SquareCollider* otherCollider);
 public:
-	// Inherited via ICollider
-	void* Execute(GameObject* caller, void* params) override;
-	IComponent* Clone(void* params) const override;
-	VECTOR3 CollideWith(GameObject* caller, GameObject* other) override;
-	VECTOR3 CollideWith(GameObject* caller, VECTOR3& point) override;
-	VECTOR3 CollideWith(VECTOR3& center, VECTOR3& point) override;
-	bool IsInside(VECTOR3& center, VECTOR3& point) override;
-	VECTOR3 GetClosestPoint(VECTOR3& center, VECTOR3& point) override;
-
-
 	typedef std::array<VECTOR3, 1 << DIMENSIONS> cornerArray_t;
-	cornerArray_t GetCorners();
+	cornerArray_t GetCorners(PosRot* center = nullptr);
 
 	VECTOR3 GetSides() { return sides; }
 	void SetSides(VECTOR3& sides) { this->sides = sides; }
 
-	QUATERNION GetOrientation() { return orientation; }
-	void SetOrientation(QUATERNION& orientation) { this->orientation = orientation; }
+	// Inherited via ColliderBase
+	void* Execute(GameObject* caller, void* params) override;
+	IComponent* Clone(void* params) const override;
+	VECTOR3 CollideWith(GameObject& caller, GameObject& other) override;
+	VECTOR3 CollideWith(PosRot& center, VECTOR3& point) override;
+	VECTOR3 GetClosestPoint(PosRot& center, VECTOR3& point) override;
+
 };
 
 #endif

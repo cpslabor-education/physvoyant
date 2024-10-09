@@ -1,32 +1,20 @@
 #include "Colliders.hpp"
 #include INCL_GAME_OBJECTS
 
-VECTOR3 SphereCollider::CollideWithSphere(GameObject* caller, GameObject* other, SphereCollider* otherCollider)
+VECTOR3 SphereCollider::CollideWithSphere(PosRot& center, PosRot& otherCenter, SphereCollider* otherCollider)
 {
 	VECTOR3 result(0);
-	if (this->radius + otherCollider->radius >= glm::distance(caller->transform.position, other->transform.position))
+	if (glm::distance(center.vector, otherCenter.vector) <= otherCollider->radius + this->radius)
 	{
-		result = glm::normalize(other->transform.position - caller->transform.position);
+		result = glm::normalize(otherCenter.vector - center.vector);
 	}
 	return result;
 }
 
-VECTOR3 SphereCollider::CollideWithSquare(GameObject* caller, GameObject* other, SquareCollider* otherCollider)
+VECTOR3 SphereCollider::CollideWithSquare(PosRot& center, PosRot& otherCenter, SquareCollider* otherCollider)
 {
-	VECTOR3 closest = otherCollider->GetClosestPoint(other->transform.position, caller->transform.position);
-	return CollideWith(caller, closest);
-}
-
-SphereCollider::SphereCollider() : ColliderBase(0, 0), radius(0)
-{
-}
-
-SphereCollider::SphereCollider(const realStandard_t radius) : ColliderBase(0, 0), radius(radius)
-{
-}
-
-SphereCollider::~SphereCollider()
-{
+	VECTOR3 closest = otherCollider->GetClosestPoint(otherCenter, center.vector);
+	return CollideWith(center, closest);
 }
 
 void* SphereCollider::Execute(GameObject* caller, void* params)
@@ -39,71 +27,84 @@ IComponent* SphereCollider::Clone(void* params) const
 	return new SphereCollider(*this);
 }
 
-VECTOR3 SphereCollider::CollideWith(GameObject* caller, GameObject* other)
+VECTOR3 SphereCollider::CollideWith(GameObject& caller, GameObject& other)
 {
-	ICollider* otherCollider = other->components.GetComponent<ICollider*>();
+	ICollider* otherCollider = other.components.GetComponent<ICollider*>();
 	if (dynamic_cast<SphereCollider*> (otherCollider))
 	{
-		return CollideWithSphere(caller, other, dynamic_cast<SphereCollider*>(otherCollider));
+		return CollideWithSphere(caller.transform.position, other.transform.position, dynamic_cast<SphereCollider*>(otherCollider));
 	}
 	else if (dynamic_cast<SquareCollider*> (otherCollider))
 	{
-		return CollideWithSquare(caller, other, dynamic_cast<SquareCollider*>(otherCollider));
+		return CollideWithSquare(caller.transform.position, other.transform.position, dynamic_cast<SquareCollider*>(otherCollider));
 	}
 	return VECTOR3(0);
 }
 
-VECTOR3 SphereCollider::CollideWith(GameObject* caller, VECTOR3& point)
+VECTOR3 SphereCollider::CollideWith(PosRot& center, VECTOR3& point)
 {
-	if (IsInside(caller->transform.position, point))
+	VECTOR3 result(0);
+	if (glm::distance(center.vector, point) <= this->radius)
 	{
-		return glm::normalize(point - caller->transform.position);
+		result = glm::normalize(point - center.vector);
 	}
-	return VECTOR3(0);
+	return result;
 }
 
-VECTOR3 SphereCollider::CollideWith(VECTOR3& center, VECTOR3& point)
+VECTOR3 SphereCollider::GetClosestPoint(PosRot& center, VECTOR3& point)
 {
-	if (IsInside(center, point))
+	return glm::normalize(point - center.vector) * glm::min(this->radius, glm::distance(point, center.vector));
+}
+
+//////////////////////////////////////////////////////////////////
+
+VECTOR3 SquareCollider::CollideWithSphere(PosRot& center, PosRot& otherCenter, SphereCollider* otherCollider)
+{
+	VECTOR3 closest = GetClosestPoint(center, otherCenter.vector);
+	return -(otherCollider->CollideWith(otherCenter, closest));
+}
+
+VECTOR3 SquareCollider::CollideWithSquare(PosRot& center, PosRot& otherCenter, SquareCollider* otherCollider)
+{
+	cornerArray_t corners = GetCorners(&center);
+	VECTOR3 result(0);
+	VECTOR3 nullVector(0);
+	for (size_t i = 0; i < corners.size(); i++)
 	{
-		return glm::normalize(point - center);
+		result = otherCollider->CollideWith(otherCenter, corners[i]);
+		if (result != nullVector) // inside
+		{
+			return -result;
+		}
 	}
-	return VECTOR3(0);
-}
-
-bool SphereCollider::IsInside(VECTOR3& center, VECTOR3& point)
-{
-	return glm::distance(center, point) <= radius;
-}
-
-VECTOR3 SphereCollider::GetClosestPoint(VECTOR3& center, VECTOR3& point)
-{
-	if (glm::distance(center, point) <= this->radius)
+	corners = otherCollider->GetCorners(&otherCenter);
+	for (size_t i = 0; i < corners.size(); i++)
 	{
-		return (point - center);
+		result = CollideWith(center, corners[i]);
+		if (result != nullVector) // inside
+		{
+			return result;
+		}
 	}
-	return glm::normalize(point - center) * radius;
+
+	return VECTOR3(0);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-VECTOR3 SquareCollider::CollideWithSphere(GameObject* caller, GameObject* other, SphereCollider* otherCollider)
+SquareCollider::cornerArray_t SquareCollider::GetCorners(PosRot* center)
 {
-	VECTOR3 closest = GetClosestPoint(caller->transform.position, other->transform.position);
-	
-	if (glm::distance(closest, caller->transform.position) <= otherCollider->GetRaduis()) // inside
+	cornerArray_t corners{ VECTOR3(0) };
+	PosRot offset = (center == nullptr) ? 0 : *center;
+	for (size_t i = 0; i < (size_t)1 << DIMENSIONS; i++)
 	{
-		return closest - caller->transform.position;
+		VECTOR3 corner(0.0);
+		for (size_t j = 0; j < corner.length(); ++j)
+		{
+			corner[j] = ((i & (1 << j)) ? 0.5 : -0.5) * sides[j];
+		}
+		corner = offset.rotation * corner;
+		corners[i] = offset.vector + corner;
 	}
-	return VECTOR3(0);
-}
-
-VECTOR3 SquareCollider::CollideWithSquare(GameObject* caller, GameObject* other, SquareCollider* otherCollider)
-{
-	// TODO: Aplly collision logic
-	return VECTOR3(0);
+	return corners;
 }
 
 void* SquareCollider::Execute(GameObject* caller, void* params)
@@ -116,92 +117,52 @@ IComponent* SquareCollider::Clone(void* params) const
 	return new SquareCollider(*this);
 }
 
-VECTOR3 SquareCollider::CollideWith(GameObject* caller, GameObject* other)
+VECTOR3 SquareCollider::CollideWith(GameObject& caller, GameObject& other)
 {
-	ICollider* otherCollider = other->components.GetComponent<ICollider*>();
+	ICollider* otherCollider = other.components.GetComponent<ICollider*>();
 	if (dynamic_cast<SphereCollider*> (otherCollider))
 	{
-		return CollideWithSphere(caller, other, dynamic_cast<SphereCollider*>(otherCollider));
+		return CollideWithSphere(caller.transform.position, other.transform.position, dynamic_cast<SphereCollider*>(otherCollider));
 	}
 	else if (dynamic_cast<SquareCollider*> (otherCollider))
 	{
-		return CollideWithSquare(caller, other, dynamic_cast<SquareCollider*>(otherCollider));
+		return CollideWithSquare(caller.transform.position, other.transform.position, dynamic_cast<SquareCollider*>(otherCollider));
 	}
 	return VECTOR3(0);
 }
 
-VECTOR3 SquareCollider::CollideWith(GameObject* caller, VECTOR3& point)
-{
-	return CollideWith(caller->transform.position, point);
-}
-
-VECTOR3 SquareCollider::CollideWith(VECTOR3& center, VECTOR3& point)
+VECTOR3 SquareCollider::CollideWith(PosRot& center, VECTOR3& point)
 {
 	VECTOR3 result(0);
-	QUATERNION invOrientation = glm::inverse(orientation);
-	VECTOR3 localPoint = invOrientation * (point - center);
-	realStandard_t halfX = sides.x / 2.0;
-	realStandard_t halfY = sides.y / 2.0;
-	realStandard_t halfZ = sides.z / 2.0;
+	QUATERNION invOrientation = glm::inverse(center.rotation);
+	VECTOR3 localPoint = invOrientation * (point)-center.vector;
 
-	if (IsInside(center, point))
+	for (size_t i = 0; i < localPoint.length(); i++)
 	{
-		realStandard_t distX = glm::min(halfX - localPoint.x, localPoint.x + halfX);
-		realStandard_t distY = glm::min(halfY - localPoint.y, localPoint.y + halfY);
-		realStandard_t distZ = glm::min(halfZ - localPoint.z, localPoint.z + halfZ);
-		if (distX > glm::max(distY, distZ))
+		if (glm::abs(localPoint[i]) > sides[i] / 2.0)
 		{
-			result = VECTOR3((localPoint.x >= 0 ? 1.0 : -1.0), 0.0, 0.0);
+			// outside
+			return result;
 		}
-		else if (distY > distZ)
-		{
-			result = VECTOR3(0.0, (localPoint.y >= 0 ? 1.0 : -1.0), 0.0);
-		}
-		else
-		{
-			result = VECTOR3(0.0, 0.0, (localPoint.y >= 0 ? 1.0 : -1.0));
-		}
-		result = result * glm::normalize(orientation);
 	}
-
+	uintStandard_t indexOfClosest = 0;
+	VECTOR3 distances (0);
+	for (size_t i = 0; i < localPoint.length(); i++)
+	{
+		distances[i] = glm::min(sides[i] / 2.0 - localPoint.x, localPoint.x + sides[i] / 2.0);
+		if (distances[i] < distances[indexOfClosest])
+		{
+			indexOfClosest = i;
+		}
+	}
+	result[indexOfClosest] = (localPoint[indexOfClosest] >= 0 ? 1.0 : -1.0);
+	result = result * glm::normalize(center.rotation);
 	return result;
 }
 
-bool SquareCollider::IsInside(VECTOR3& center, VECTOR3& point)
+VECTOR3 SquareCollider::GetClosestPoint(PosRot& center, VECTOR3& point)
 {
-	QUATERNION invOrientation = glm::inverse(orientation);
-	VECTOR3 localPoint = invOrientation * (point - center);
-	realStandard_t halfX = sides.x / 2.0;
-	realStandard_t halfY = sides.y / 2.0;
-	realStandard_t halfZ = sides.z / 2.0;
-	return	(localPoint.x >= -halfX && localPoint.x <= halfX &&
-			 localPoint.y >= -halfY && localPoint.y <= halfY &&
-			 localPoint.z >= -halfZ && localPoint.z <= halfZ);
-}
-
-SquareCollider::cornerArray_t SquareCollider::GetCorners()
-{
-	cornerArray_t corners;
-	for (size_t i = 0; i < (size_t)1 << DIMENSIONS; i++)
-	{
-		VECTOR3 corner(0.0);
-		for (size_t j = 0; j < corner.length(); ++j)
-		{
-			corner[j] = ((i & (1 << j)) ? 0.5 : -0.5) * sides[j];
-		}
-		corner = orientation * corner;
-		corners[i] = (corner);
-	}
-	return corners;
-}
-
-VECTOR3 SquareCollider::GetClosestPoint(VECTOR3& center, VECTOR3& point)
-{
-	cornerArray_t corners = GetCorners();
-	for (size_t i = 0; i < (size_t)1 << DIMENSIONS; i++)
-	{
-		corners[i] = corners[i] + center;
-	}
+	cornerArray_t corners = GetCorners(&center);
 	VECTOR3 closest = point;
 	for (size_t i = 0; i < closest.length(); i++)
 	{
