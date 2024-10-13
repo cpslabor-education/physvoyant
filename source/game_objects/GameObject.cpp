@@ -7,10 +7,6 @@ GameObject::GameObject() : components(ComponentContainer<IComponent*>()), transf
 
 GameObject::~GameObject()
 {
-	for (size_t i = 0; i < components.Count(); i++)
-	{
-		delete components[i];
-	}
 }
 
 void GameObject::Update()

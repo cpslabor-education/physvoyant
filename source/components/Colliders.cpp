@@ -101,7 +101,7 @@ SquareCollider::cornerArray_t SquareCollider::GetCorners(PosRot* center)
 		{
 			corner[j] = ((i & (1 << j)) ? 0.5 : -0.5) * sides[j];
 		}
-		corner = offset.rotation * corner;
+		corner = offset.GetRotation() * corner;
 		corners[i] = offset.vector + corner;
 	}
 	return corners;
@@ -134,7 +134,7 @@ VECTOR3 SquareCollider::CollideWith(GameObject& caller, GameObject& other)
 VECTOR3 SquareCollider::CollideWith(PosRot& center, VECTOR3& point)
 {
 	VECTOR3 result(0);
-	QUATERNION invOrientation = glm::inverse(center.rotation);
+	QUATERNION invOrientation = glm::inverse(center.GetRotation());
 	VECTOR3 localPoint = invOrientation * (point)-center.vector;
 
 	for (size_t i = 0; i < localPoint.length(); i++)
@@ -156,7 +156,7 @@ VECTOR3 SquareCollider::CollideWith(PosRot& center, VECTOR3& point)
 		}
 	}
 	result[indexOfClosest] = (localPoint[indexOfClosest] >= 0 ? 1.0 : -1.0);
-	result = result * glm::normalize(center.rotation);
+	result = result * center.GetRotation();
 	return result;
 }
 

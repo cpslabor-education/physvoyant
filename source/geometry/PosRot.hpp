@@ -8,21 +8,27 @@
 
 class PosRot
 {
+	QUATERNION rotation;
 public:
-	PosRot() : vector(VECTOR3(0)), rotation(glm::identity<QUATERNION>())
+	PosRot(realStandard_t number = 0) : vector(VECTOR3(number)), rotation(glm::identity<QUATERNION>())
 	{
 
 	}
-	PosRot(realStandard_t number) : vector(VECTOR3(number)), rotation(glm::identity<QUATERNION>())
-	{
-
-	}
-	PosRot(VECTOR3 vector, QUATERNION rotation) : vector(vector), rotation(rotation)
+	PosRot(VECTOR3 vector, QUATERNION rotation = glm::identity<QUATERNION>()) : vector(vector), rotation(glm::normalize(rotation))
 	{
 
 	}
 	VECTOR3 vector;
-	QUATERNION rotation;
+
+	QUATERNION GetRotation() const
+	{
+		return rotation;
+	}
+
+	void SetRotation(const QUATERNION& value)
+	{
+		rotation = glm::normalize(value);
+	}
 };
 
 

@@ -25,6 +25,11 @@ void Engine::SetActiveScene(Scene* scene)
 	activeScene = scene;
 }
 
+Scene* Engine::GetActiveScene()
+{
+	return activeScene;
+}
+
 bool Engine::Run()
 {
 	if (activeScene != nullptr)
@@ -46,6 +51,11 @@ void Engine::Time(uintStandard_t fps)
 	std::this_thread::sleep_for(TIME_CAST_SIZE(timeToPass));
 	clock.SetCurrentTime();
 	clock.StartMeasure();
+}
+
+int Engine::MemCheck()
+{
+	return _CrtDumpMemoryLeaks();
 }
 
 void Engine::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

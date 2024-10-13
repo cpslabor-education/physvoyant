@@ -29,12 +29,11 @@ public:
 		return components[index];
 	}
 
-	template
-	<typename Type>
 	void AddComponent(T component, void* params = nullptr)
 	{
-		components.push_back(dynamic_cast<Type>(component->Clone(params)));
+		components.push_back((component->Clone(params)));
 	}
+
 	T GetComponent(componentID_t ID)
 	{
 		for (size_t i = 0; i < components.size(); i++)

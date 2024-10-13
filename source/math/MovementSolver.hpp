@@ -38,19 +38,19 @@ public:
 	static void ExplicitEulerSolver(Transform* transform, realStandard_t deltaTime)
 	{
 		transform->position.vector = ApplyDelta(transform->position.vector, transform->velocity.vector, deltaTime);
-		transform->position.rotation = ApplyRotationDelta(transform->position.rotation, transform->velocity.rotation, deltaTime);
+		transform->position.SetRotation(ApplyRotationDelta(transform->position.GetRotation(), transform->velocity.GetRotation(), deltaTime));
 
 		transform->velocity.vector = ApplyDelta(transform->velocity.vector, transform->acceleration.vector, deltaTime);
-		transform->velocity.rotation = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation, deltaTime);
+		transform->velocity.SetRotation(ApplyRotationDelta(transform->velocity.GetRotation(), transform->acceleration.GetRotation(), deltaTime));
 	}
 
 	static void SemiImplicitEulerSolver(Transform* transform, realStandard_t deltaTime)
 	{
 		transform->velocity.vector = ApplyDelta(transform->velocity.vector, transform->acceleration.vector, deltaTime);
-		transform->velocity.rotation = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation, deltaTime);
+		transform->velocity.SetRotation(ApplyRotationDelta(transform->velocity.GetRotation(), transform->acceleration.GetRotation(), deltaTime));
 
 		transform->position.vector = ApplyDelta(transform->position.vector, transform->velocity.vector, deltaTime);
-		transform->position.rotation = ApplyRotationDelta(transform->position.rotation, transform->velocity.rotation, deltaTime);
+		transform->position.SetRotation(ApplyRotationDelta(transform->position.GetRotation(), transform->velocity.GetRotation(), deltaTime));
 	}
 
 	// Accuracy
@@ -75,25 +75,25 @@ public:
 	static void RungeKutta4(Transform* transform, realStandard_t deltaTime)
 	{
 		VECTOR3 k1 = transform->velocity.vector;
-		QUATERNION q1 = transform->velocity.rotation;
+		QUATERNION q1 = transform->velocity.GetRotation();
 
 		VECTOR3 k2 = ApplyDelta(transform->velocity.vector, transform->acceleration.vector + k1 * deltaTime / 2.0, deltaTime / 2.0);
-		QUATERNION q2 = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation + q1 * deltaTime / 2.0, deltaTime / 2.0);
+		QUATERNION q2 = ApplyRotationDelta(transform->velocity.GetRotation(), transform->acceleration.GetRotation() + q1 * deltaTime / 2.0, deltaTime / 2.0);
 
 		VECTOR3 k3 = ApplyDelta(transform->velocity.vector, transform->acceleration.vector + k2 * deltaTime / 2.0, deltaTime / 2.0);
-		QUATERNION q3 = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation + q2 * deltaTime / 2.0, deltaTime / 2.0);
+		QUATERNION q3 = ApplyRotationDelta(transform->velocity.GetRotation(), transform->acceleration.GetRotation() + q2 * deltaTime / 2.0, deltaTime / 2.0);
 
 		VECTOR3 k4 = ApplyDelta(transform->velocity.vector, transform->acceleration.vector + k3 * deltaTime, deltaTime);
-		QUATERNION q4 = ApplyRotationDelta(transform->velocity.rotation, transform->acceleration.rotation + q3 * deltaTime / 2.0, deltaTime / 2.0);
+		QUATERNION q4 = ApplyRotationDelta(transform->velocity.GetRotation(), transform->acceleration.GetRotation() + q3 * deltaTime / 2.0, deltaTime / 2.0);
 
 		VECTOR3 delta = (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0 * deltaTime;
 		QUATERNION deltaRotation = (q1 + 2.0 * q2 + 2.0 * q3 + q4) / 6.0 * deltaTime;
 
 		transform->position.vector = ApplyDelta(transform->position.vector, delta, deltaTime);
-		transform->position.rotation = ApplyRotationDelta(transform->position.rotation, deltaRotation, deltaTime);
+		transform->position.SetRotation(ApplyRotationDelta(transform->position.GetRotation(), deltaRotation, deltaTime));
 
 		transform->velocity.vector = delta;
-		transform->velocity.rotation = deltaRotation;
+		transform->velocity.SetRotation(deltaRotation);
 	}
 
 

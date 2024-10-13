@@ -12,6 +12,7 @@ public:
 	static Scene* GetDefaultScene();
 	static Scene* FloatingShpehere();
 	static Scene* SpheresCollide();
+	static Scene* TonsOfSpheres();
 };
 
 

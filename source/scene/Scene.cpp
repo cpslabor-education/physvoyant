@@ -11,11 +11,9 @@ Scene::~Scene()
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
 		delete gameObjects[i];
+		gameObjects[i] = nullptr;
 	}
-	for (size_t i = 0; i < components.Count(); i++)
-	{
-		delete components[i];
-	}
+	gameObjects.clear();
 	delete objectTree;
 }
 
@@ -32,5 +30,8 @@ void Scene::UpdateScene()
 void Scene::AddObject(GameObject* object)
 {
 	gameObjects.push_back(object);
-	objectTree->Insert(object, object->transform.position.vector);
+	if (objectTree != nullptr)
+	{
+		objectTree->Insert(object, object->transform.position.vector);
+	}
 }

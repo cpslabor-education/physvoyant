@@ -42,11 +42,14 @@ public:
 	}
 
 	void SetActiveScene(Scene* scene);
+	Scene* GetActiveScene();
 	void Start();
 	void Stop();
 
 	bool Run();
 	void Time(uintStandard_t fps = 0);
+
+	static int MemCheck();
 
 	//int CreateWindow(int width, int height, char* title);
 	//int CreateWindow(int width, int height, const char* title);
