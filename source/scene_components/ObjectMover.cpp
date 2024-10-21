@@ -1,12 +1,8 @@
 #include "ObjectMover.hpp"
 #include <vector>
 
-ObjectMover::ObjectMover() : ID(0), solverType((MovementSolver::Solvers)0), leapfrogSteps(0)
-{
-}
-
-ObjectMover::ObjectMover(const componentID_t& ID, const MovementSolver::Solvers& solverType, const uintStandard_t& leapfrogSteps)
-	: ID(ID), solverType(solverType), leapfrogSteps(leapfrogSteps)
+ObjectMover::ObjectMover(const componentID_t ID, const MovementSolver::Solvers solverType, const uintStandard_t leapfrogSteps)
+	: SceneComponentBase(ID), solverType(solverType), leapfrogSteps(leapfrogSteps)
 {
 }
 
@@ -44,7 +40,7 @@ void* ObjectMover::Execute(Scene* caller, void* params)
 		{
 			caller->objectTree->MoveItem(caller->objectTree->Find(previous.position.vector), helper[i], caller->objectTree->Find(helper[i]->transform.position.vector));
 		}
-		helper[i]->transform.acceleration.vector = VECTOR3(0);
+		helper[i]->transform.acceleration.vector = NULLVECTOR;
 	}
 	return nullptr;
 }
@@ -52,9 +48,4 @@ void* ObjectMover::Execute(Scene* caller, void* params)
 ISceneComponent* ObjectMover::Clone(void* params) const
 {
 	return new ObjectMover(*this);
-}
-
-componentID_t ObjectMover::GetID()
-{
-	return ID;
 }

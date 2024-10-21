@@ -46,6 +46,7 @@ typedef uintStandard_t componentID_t;
 #define VECTOR3 glm::vec<DIMENSIONS, realStandard_t, GLM_PRECISION>
 #define QUATERNION glm::qua<realStandard_t, GLM_PRECISION>
 #define TRANSFORM_MATRIX glm::tmat4x4<realStandard_t>
+#define NULLVECTOR VECTOR3(0)
 typedef uintStandard_t timeValue_t;
 
 // 0: second, 1 millisecond, 2 microsecond, 3 nanosecond
@@ -179,5 +180,6 @@ typedef uintStandard_t timeValue_t;
 #define SNE63 (1.0e-63)
 #define SNE64 (1.0e-64)
 
+#define REAL_EPSILON (SNE7)
 
 #endif // !DEFINES

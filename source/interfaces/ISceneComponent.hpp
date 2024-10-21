@@ -5,12 +5,11 @@
 
 class Scene;
 
-__interface ISceneComponent
+class ISceneComponent
 {
 public:
-	void* Execute(Scene* caller, void* params = nullptr);
-	ISceneComponent* Clone(void* params = nullptr) const;
-	componentID_t GetID();
+	virtual void* Execute(Scene* caller, void* params = nullptr) = 0;
+	virtual ISceneComponent* Clone(void* params = nullptr) const = 0;
 };
 
 #endif

@@ -29,7 +29,7 @@ Scene* SceneFactory::SpheresCollide()
 	Engine* e = Engine::GetInstance();
 
 	Scene* scene = new Scene();
-	scene->objectTree = new OctTree<GameObject*>(VECTOR3(0), 3, 8);
+	scene->objectTree = new OctTree<GameObject*>(NULLVECTOR, 3, 8);
 
 	ObjectMover* mover = new ObjectMover();
 	mover->solverType = MovementSolver::Solvers::RungeKutta4;

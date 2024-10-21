@@ -1,12 +1,15 @@
 #ifndef IUPDATEABLE
 #define IUPDATEABLE
 
-__interface IUpdateable
+class IUpdateable
 {
 public:
+	IUpdateable() = default;
+	virtual ~IUpdateable() = default;
+
 	//void FirstUpdate();
 	//void PreUpdate();
-	void Update();
+	virtual void Update() = 0;
 	//void PostUpdate();
 	//void LastUpadte();
 };

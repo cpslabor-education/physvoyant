@@ -1,10 +1,11 @@
 #ifndef RENDERABLE
 #define RENDERABLE
 
-__interface IRenderable
+class IRenderable
 {
 public:
-	
+	IRenderable() = default;
+	virtual ~IRenderable() = default;
 };
 
 

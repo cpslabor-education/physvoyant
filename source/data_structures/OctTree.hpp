@@ -35,7 +35,7 @@ class OctTree
 	//  negative, negative, negative
 
 public:
-	OctTree() : center(VECTOR3(0)), widthOnLayer(nullptr), depth(0), elements()
+	OctTree() : center(NULLVECTOR), widthOnLayer(nullptr), depth(0), elements()
 	{
 
 	}

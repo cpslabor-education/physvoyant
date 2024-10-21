@@ -41,7 +41,7 @@ bool Engine::Run()
 
 void Engine::Time(uintStandard_t fps)
 {
-	if (fps == 0)
+	if (fps == -1)
 	{
 		fps = this->fps;
 	}
@@ -128,7 +128,7 @@ void Engine::Initialise()
 	glfwSetErrorCallback(ErrorCallback);
 }
 
-Engine::Engine() : activeScene(0), clock()
+Engine::Engine() : activeScene(0), clock(), fps(0)
 {
 
 }

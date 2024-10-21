@@ -7,7 +7,7 @@ class PosRot;
 #include "../defines.hpp"
 #include INCL_GLM
 
-__interface ICollider : public IComponent
+class ICollider
 {
 public:
 	/// <summary>
@@ -16,8 +16,8 @@ public:
 	/// <param name="caller">The parent of the collider (should be "this")</param>
 	/// <param name="other">The other object to check for collision</param>
 	/// <returns>The direction of collsion</returns>
-	VECTOR3 CollideWith(GameObject& caller, GameObject& other);
-	VECTOR3 CollideWith(PosRot& center, VECTOR3& point);
+	virtual VECTOR3 CollideWith(GameObject& caller, GameObject& other) = 0;
+	virtual VECTOR3 CollideWith(PosRot& center, VECTOR3& point) = 0;
 };
 
 #endif

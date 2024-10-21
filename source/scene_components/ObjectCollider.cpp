@@ -23,7 +23,7 @@ void* ObjectCollider::Execute(Scene* caller, void* params)
 					continue;
 				}
 				VECTOR3 inResult = inCollider->CollideWith(*in, *out);
-				if (inResult == VECTOR3(0))
+				if (inResult == NULLVECTOR)
 				{
 					// no collision
 					continue;
@@ -36,7 +36,6 @@ void* ObjectCollider::Execute(Scene* caller, void* params)
 				}
 			}
 		}
-
 	}
 	else
 	{
@@ -48,9 +47,4 @@ void* ObjectCollider::Execute(Scene* caller, void* params)
 ISceneComponent* ObjectCollider::Clone(void* params) const
 {
 	return new ObjectCollider(*this);
-}
-
-componentID_t ObjectCollider::GetID()
-{
-	return ID;
 }

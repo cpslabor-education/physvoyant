@@ -5,13 +5,14 @@
 
 class GameObject;
 
-__interface IComponent
+class IComponent
 {
 public:
-	void* Execute(GameObject* caller, void* params = nullptr);
-	IComponent* Clone(void* params = nullptr) const;
-	componentID_t GetID();
-	void SetID(componentID_t ID);
+	IComponent() = default;
+	virtual ~IComponent() = default;
+
+	virtual void* Execute(GameObject* caller, void* params = nullptr) = 0;
+	virtual IComponent* Clone(void* params = nullptr) const = 0;
 };
 
 #endif

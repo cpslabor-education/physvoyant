@@ -47,7 +47,7 @@ public:
 	void Stop();
 
 	bool Run();
-	void Time(uintStandard_t fps = 0);
+	void Time(uintStandard_t fps = -1);
 
 	static int MemCheck();
 
