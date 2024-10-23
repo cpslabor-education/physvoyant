@@ -1,8 +1,8 @@
+#include "../glad/gl.h"
 #include "Camera.hpp"
 #include INCL_SCENE
-#include INCL_GLFW
 #define GLAD_GL_IMPLEMENTATION
-#include <gl/GL.h>
+#include INCL_GLFW
 
 Camera::Camera()
 {
@@ -21,6 +21,8 @@ void* Camera::Execute(Scene* caller, void* params)
 	else
 	{		
 		GLuint vertex_buffer;
+		glGenBuffers(1, &vertex_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 		return nullptr;
 	}
 }
