@@ -7,7 +7,7 @@ Engine* Engine::instancePtr = nullptr;
 
 Engine::~Engine()
 {
-	glfwTerminate();
+
 }
 
 void Engine::ErrorCallback(int error, char* description)
@@ -28,6 +28,23 @@ void Engine::SetActiveScene(Scene* scene)
 Scene* Engine::GetActiveScene()
 {
 	return activeScene;
+}
+
+void Engine::InitGLFW()
+{
+	glfwSetErrorCallback(ErrorCallback);
+	if (!glfwInit())
+	{		
+		exit(EXIT_FAILURE);
+	}
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+}
+
+void Engine::StopGLFW()
+{
+	glfwTerminate();
 }
 
 bool Engine::Run()
@@ -120,13 +137,6 @@ void Engine::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 //{
 //	glfwFocusWindow(window);
 //}
-
-
-void Engine::Initialise()
-{
-	activeScene = nullptr;
-	glfwSetErrorCallback(ErrorCallback);
-}
 
 Engine::Engine() : activeScene(0), clock(), fps(0)
 {

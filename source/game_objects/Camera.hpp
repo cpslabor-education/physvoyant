@@ -1,24 +1,22 @@
 #ifndef CAMERA
 #define CAMERA
 
+class Camera;
+
 #include "../defines.hpp"
 #include INCL_GLFW
 #include INCL_INTERFACES
+#include "../scene_components/SceneComponentBase.hpp"
 
-class Camera : public IUpdateable
+class Camera : SceneComponentBase
 {
-	GLFWwindow* displayWindow;
 public:
 	Camera();
-
-	Camera(Camera& other);
-
 	~Camera();
 
-	void operator=(const Camera& other);
-
-	// Inherited via IUpdateable
-	void Update() override;
+	// Inherited via ISceneComponent
+	void* Execute(Scene* caller, void* params = nullptr) override;
+	ISceneComponent* Clone(void* params = nullptr) const override;
 };
 
 

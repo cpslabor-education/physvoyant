@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 #include "../defines.hpp"
 
-Scene::Scene() : camera(), gameObjects(), window(nullptr), objectTree(nullptr), components()
+Scene::Scene() : camera(nullptr), gameObjects(), window(nullptr), objectTree(nullptr), components()
 {
 
 }
@@ -15,6 +15,8 @@ Scene::~Scene()
 	}
 	gameObjects.clear();
 	delete objectTree;
+	delete camera;
+	glfwDestroyWindow(window);
 }
 
 void Scene::UpdateScene()
@@ -24,7 +26,7 @@ void Scene::UpdateScene()
 	{
 		gameObjects[i]->Update();
 	}
-	// camera.Update();
+	camera->Execute(this);
 }
 
 void Scene::AddObject(GameObject* object)
@@ -35,3 +37,18 @@ void Scene::AddObject(GameObject* object)
 		objectTree->Insert(object, object->transform.position.vector);
 	}
 }
+
+void Scene::SetupWindow(int width, int height, char* title)
+{
+	window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+	if (window == nullptr)
+	{
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+	glfwSetKeyCallback(window, Engine::KeyCallback);
+
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
+}
+

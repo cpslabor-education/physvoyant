@@ -13,7 +13,7 @@ template <typename T>
 class OctTree
 {
 	VECTOR3 center;
-	uintStandard_t* widthOnLayer;
+	uintStandard_t chunkSize;
 	uintStandard_t depth;
 	ChunkedVector<std::list<T>*> elements;
 
@@ -34,35 +34,27 @@ class OctTree
 	// 8th:
 	//  negative, negative, negative
 
+	uintStandard_t WidthOnLayer(uintStandard_t layer)
+	{
+		return chunkSize * ((size_t)1 << layer);
+	}
+
 public:
-	OctTree() : center(NULLVECTOR), widthOnLayer(nullptr), depth(0), elements()
+	OctTree() : center(NULLVECTOR), chunkSize(0), depth(0), elements()
 	{
 
 	}
-	OctTree(VECTOR3& center, uintStandard_t depth, uintStandard_t chunkSize) : center(center), widthOnLayer(nullptr), depth(depth), elements(glm::sqrt(1 << (DIMENSIONS * depth)))
+	OctTree(VECTOR3& center, uintStandard_t depth, uintStandard_t chunkSize) : center(center), chunkSize(chunkSize), depth(depth), elements(glm::sqrt(1 << (DIMENSIONS * depth)))
 	{
 		assert(depth - 1 < 9);
 		assert(chunkSize % 2 == 0);
-		widthOnLayer = new uintStandard_t[this->depth];
-		NULL_CHECK(widthOnLayer);
-		for (size_t i = 0; i < this->depth; i++)
-		{
-			widthOnLayer[i] = chunkSize * ((size_t)1 << i);
-		}
 		uintStandard_t totalLeafs = (uintStandard_t)1 << (DIMENSIONS * depth);
 		for (size_t i = 0; i < totalLeafs; i++)
 		{
 			elements.push_back(nullptr);
 		}
 	}
-	~OctTree()
-	{
-		for (size_t i = 0; i < elements.size(); i++)
-		{
-			delete elements[i];
-		}
-		delete[] widthOnLayer;
-	}
+	~OctTree() = default;
 
 	std::list<T>* GetList(uintStandard_t index)
 	{
@@ -130,11 +122,11 @@ public:
 		{
 			for (size_t j = 0; j < point.length(); j++)
 			{
-				newCenter[j] += widthOnLayer[i] >> 1;
+				newCenter[j] += WidthOnLayer(i) >> 1;
 				realStandard_t tmp = point[j] - localCenter[j];
 				if (tmp < 0)
 				{
-					newCenter[j] -= widthOnLayer[i];
+					newCenter[j] -= WidthOnLayer(i);
 					index |= (1 << point.length() - 1 - j);
 				}
 			}
@@ -149,7 +141,7 @@ public:
 	{
 		// Not functioning
 		point = point - center;
-		intStandard_t width = widthOnLayer[depth - 1] * 2;
+		intStandard_t width = WidthOnLayer(depth);
 		VECTOR3 min(-width);
 		VECTOR3 max(width);
 		point = glm::clamp(point, min, max);
@@ -198,7 +190,7 @@ public:
 	{
 		std::vector<std::list<T>*> result;
 		result.reserve((intStandard_t)glm::pow(3, DIMENSIONS));
-		intStandard_t offsets[]{ -((intStandard_t)widthOnLayer[0]), 0, (intStandard_t)widthOnLayer[0] };
+		intStandard_t offsets[]{ -((intStandard_t)WidthOnLayer(0)), 0, (intStandard_t)WidthOnLayer(0) };
 		VECTOR3 local(0);
 		uintStandard_t counter[point.length()];
 		for (size_t i = 0; i < point.length(); i++)
@@ -227,7 +219,7 @@ public:
 
 	bool WithinSameSquare(VECTOR3 point1, VECTOR3 point2)
 	{
-		intStandard_t width = widthOnLayer[0];
+		intStandard_t width = WidthOnLayer(0);
 		for (size_t i = 0; i < point1.length(); i++)
 		{
 			point1[i] = ((intStandard_t)point1[i]) / width;

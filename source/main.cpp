@@ -21,21 +21,33 @@
 
 int main()
 {
+	// TODO: SquareCollider orientation + miniTransform class
+	//SquareCollider cll;
+	//cll.SetID(32);
+	//cll.SetSides(VECTOR3(3));
+	//PosRot tmp (VECTOR3(10), glm::quatLookAt(VECTOR3{90, 0, 0}, VECTOR3{0, 0, 1}));
+	//SquareCollider::cornerArray_t corners = cll.GetCorners(&tmp);
+	//VECTOR3 closest = cll.GetClosestPoint(tmp, VECTOR3(50));
+	//return 0;
+
 	Engine* e = Engine::GetInstance();
+	Engine::InitGLFW();
 	e->clock.SetPhysicsTimeStep(TO_TIME_UNIT(0.1));
-	e->SetFPS(20);
+	e->SetFPS(0);
 
-	e->SetActiveScene(SceneFactory::SpheresCollide());
+	e->SetActiveScene(SceneFactory::CameraTest());
 
-	for (int i = 0; i < 10000; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		e->Run();
 		e->Time();
 	}
 
-
-
-
+	Engine::StopGLFW();
+	delete e->GetActiveScene();
+	delete e;
+	std::cout << Engine::MemCheck();
+	return 0;
 
 
 
@@ -55,7 +67,7 @@ int main()
 	//dummy->components.AddComponent<SphereCollider*>(cmp);
 	//delete cmp;
 	//dummy->components.UpdateAll();
-	//OctTree<GameObject*>* tree = new OctTree<GameObject*>(VECTOR3(0), 2, 16);
+	//OctTree<GameObject*>* tree = new OctTree<GameObject*>(NULLVECTOR, 2, 16);
 	//tree->WithinSameSquare(VECTOR3(-15.9), VECTOR3(-16));
 	//delete container[0];
 	//tree->Insert(new GameObject(), VECTOR3(1, 1, 1));

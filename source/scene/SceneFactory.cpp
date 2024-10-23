@@ -83,3 +83,11 @@ Scene* SceneFactory::TonsOfSpheres()
 	delete mover;
 	return scene;
 }
+
+Scene* SceneFactory::CameraTest()
+{
+	Camera* camera = new Camera();
+	Scene* s = new Scene();
+	s->camera = camera;
+	return nullptr;
+}

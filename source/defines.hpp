@@ -41,9 +41,12 @@ typedef uintStandard_t componentID_t;
 #define OCTTREE_DEPTH 4
 #define OCTTREE_CHUNK_SIZE 1024
 
+#define DEFAULT_WIDTH 640
+#define DEFAULT_HEIGHT 480
 #define DIMENSIONS 3
 #define GLM_PRECISION glm::packed_highp
 #define VECTOR3 glm::vec<DIMENSIONS, realStandard_t, GLM_PRECISION>
+#define VERTEX_VECTOR3 glm::vec<DIMENSIONS, float, GLM_PRECISION>
 #define QUATERNION glm::qua<realStandard_t, GLM_PRECISION>
 #define TRANSFORM_MATRIX glm::tmat4x4<realStandard_t>
 #define NULLVECTOR VECTOR3(0)

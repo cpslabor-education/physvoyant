@@ -1,6 +1,8 @@
 #ifndef OBJECTS_MOVER
 #define OBJECTS_MOVER
 
+class ObjectMover;
+
 #include "../defines.hpp"
 #include INCL_INTERFACES
 #include INCL_MATH

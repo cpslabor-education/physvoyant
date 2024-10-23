@@ -2,6 +2,7 @@
 #define ODE_SOLVER
 
 class MovementSolver;
+enum class Solvers;
 
 #include "../defines.hpp"
 #include INCL_ENGINE

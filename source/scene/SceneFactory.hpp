@@ -13,6 +13,7 @@ public:
 	static Scene* FloatingShpehere();
 	static Scene* SpheresCollide();
 	static Scene* TonsOfSpheres();
+	static Scene* CameraTest();
 };
 
 

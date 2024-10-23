@@ -14,7 +14,7 @@ class Scene;
 class Scene 
 {
 public:
-	Camera camera;
+	Camera* camera;
 	std::vector<GameObject*> gameObjects;
 	GLFWwindow* window;
 	OctTree<GameObject*>* objectTree;
@@ -25,8 +25,8 @@ public:
 	~Scene();
 
 	void UpdateScene();
-
 	void AddObject(GameObject* object);
+	void SetupWindow(int width, int height, char* title);
 };
 
 

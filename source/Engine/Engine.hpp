@@ -11,7 +11,6 @@
 class Engine
 {
 	Engine();
-	void Initialise();
 	static Engine* instancePtr;
 	Scene* activeScene;
 	uintStandard_t fps;
@@ -43,13 +42,14 @@ public:
 
 	void SetActiveScene(Scene* scene);
 	Scene* GetActiveScene();
-	void Start();
-	void Stop();
 
 	bool Run();
 	void Time(uintStandard_t fps = -1);
 
 	static int MemCheck();
+
+	static void InitGLFW();
+	static void StopGLFW();
 
 	//int CreateWindow(int width, int height, char* title);
 	//int CreateWindow(int width, int height, const char* title);
