@@ -1,4 +1,6 @@
+#include "../glad/gl.h"
 #include "Scene.hpp"
+#include INCL_GLFW
 #include "../defines.hpp"
 
 Scene::Scene() : camera(nullptr), gameObjects(), window(nullptr), objectTree(nullptr), components()
@@ -50,5 +52,9 @@ void Scene::SetupWindow(int width, int height, char* title)
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
+
+	glfwMakeContextCurrent(window);
+	Engine::WriteInfo("Glad version:");
+	Engine::WriteInfo(gladLoadGL(glfwGetProcAddress));
 }
 

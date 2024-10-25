@@ -1,9 +1,45 @@
+#include "../glad/gl.h"
 #include "Engine.hpp"
+#define GLAD_GL_IMPLEMENTATION
+#include INCL_GLFW
 #include <iostream>
 #include <chrono>
 #include <thread>
 
 Engine* Engine::instancePtr = nullptr;
+std::string Engine::shader_text =
+R"(
+#version 330 core
+
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 color;
+
+out vec3 vertexColor;
+
+uniform mat4 view;
+
+void main()
+{
+	vec4 worldPosition = vec4(position, 1.0);
+	gl_Position = view * worldPosition;
+	vertexColor = color;
+})";
+
+std::string Engine::fragment_shader_text =
+R"(
+#version 330 core
+
+in vec3 vertexColor;
+out vec4 fragColor;
+
+void main() 
+{
+	fragColor = vec4(vertexColor, 1.0);
+}
+)";
+
+VECTOR3 Engine::upVector = UPVECTOR;
+
 
 Engine::~Engine()
 {
@@ -34,12 +70,14 @@ void Engine::InitGLFW()
 {
 	glfwSetErrorCallback(ErrorCallback);
 	if (!glfwInit())
-	{		
+	{
 		exit(EXIT_FAILURE);
 	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	WriteInfo("GLFW version:");
+	WriteInfo(glfwGetVersionString());
 }
 
 void Engine::StopGLFW()
@@ -58,7 +96,7 @@ bool Engine::Run()
 
 void Engine::Time(uintStandard_t fps)
 {
-	if (fps == -1)
+	if (fps == 0)
 	{
 		fps = this->fps;
 	}

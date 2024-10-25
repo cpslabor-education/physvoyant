@@ -33,6 +33,7 @@ typedef uintStandard_t componentID_t;
 #define INCL_RENDERER "../renderer/Renderer.hpp"
 #define INCL_SCENE "../scene/include_scene.hpp"
 #define INCL_SCENE_COMPONENTS "../scene_components/include_scene_components.hpp"
+#define INCL_GLAD "../glad/gl.h"
 #define INCL_GLFW <GLFW/glfw3.h>
 #define INCL_GLM <glm/glm.hpp>
 #define INCL_QUATERNION <glm/gtc/quaternion.hpp>
@@ -50,6 +51,7 @@ typedef uintStandard_t componentID_t;
 #define QUATERNION glm::qua<realStandard_t, GLM_PRECISION>
 #define TRANSFORM_MATRIX glm::tmat4x4<realStandard_t>
 #define NULLVECTOR VECTOR3(0)
+#define UPVECTOR VERTEX_VECTOR3(0, 0, 1)
 typedef uintStandard_t timeValue_t;
 
 // 0: second, 1 millisecond, 2 microsecond, 3 nanosecond

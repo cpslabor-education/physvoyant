@@ -1,8 +1,8 @@
 #ifndef ENGINE
 #define ENGINE
 
+#include <string>
 #include "../defines.hpp"
-#include INCL_GLFW
 #include INCL_RENDERER
 #include INCL_DATA_STRUCTURES
 #include INCL_SCENE
@@ -16,6 +16,10 @@ class Engine
 	uintStandard_t fps;
 public:
 	Clock clock;
+	static std::string shader_text;
+	static std::string fragment_shader_text;
+	static VECTOR3 upVector;
+
 	Engine(Engine& other) = delete;
 
 	void operator=(const Engine& other) = delete;
@@ -44,7 +48,7 @@ public:
 	Scene* GetActiveScene();
 
 	bool Run();
-	void Time(uintStandard_t fps = -1);
+	void Time(uintStandard_t fps = 0);
 
 	static int MemCheck();
 

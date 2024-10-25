@@ -19,7 +19,7 @@ public:
 	// TODO: apply force, apply motion
 
 	// Constructors
-	Transform() : position(), velocity(), acceleration()
+	Transform() : position(0), velocity(0), acceleration(0), mass(0)
 	{
 	}
 

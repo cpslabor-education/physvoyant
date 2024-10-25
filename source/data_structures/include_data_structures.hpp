@@ -5,6 +5,7 @@
 #include "OctTree.hpp"
 #include "ComponentContainer.hpp"
 #include "ComponentIdentifier.hpp"
+#include "VertexBuffer.hpp"
 //#include "DLinkedList.hpp"
 //#include "DArray.hpp"
 //#include "Reflection.hpp"

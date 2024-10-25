@@ -1,6 +1,8 @@
+#include "../glad/gl.h"
 #include "SceneFactory.hpp"
 #include INCL_SCENE_COMPONENTS
 #include INCL_COMPONENTS
+#include INCL_GLFW
 
 Scene* SceneFactory::FloatingShpehere()
 {
@@ -86,8 +88,11 @@ Scene* SceneFactory::TonsOfSpheres()
 
 Scene* SceneFactory::CameraTest()
 {
-	Camera* camera = new Camera();
 	Scene* s = new Scene();
+	s->SetupWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "test");
+
+	Camera* camera = new Camera();
+	camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
 	s->camera = camera;
 	return nullptr;
 }
