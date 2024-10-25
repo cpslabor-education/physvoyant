@@ -3,10 +3,20 @@
 
 VertexBuffer::VertexBuffer() : verticies(), bufferID(0)
 {
-	glGenBuffers(1, &bufferID);
 }
 
 VertexBuffer::~VertexBuffer()
+{
+
+}
+
+unsigned int VertexBuffer::CreateBuffer()
+{
+	glGenBuffers(1, &bufferID);
+	return bufferID;
+}
+
+void VertexBuffer::DeleteBuffer()
 {
 	if (bufferID != 0)
 	{
