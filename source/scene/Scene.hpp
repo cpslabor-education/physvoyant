@@ -17,7 +17,7 @@ public:
 	Camera* camera;
 	std::vector<GameObject*> gameObjects;
 	GLFWwindow* window;
-	OctTree<GameObject*>* objectTree;
+	OcTree<GameObject*>* objectTree;
 	ComponentContainer<ISceneComponent*> components;
 
 	Scene();

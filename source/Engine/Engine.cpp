@@ -14,14 +14,14 @@ R"(
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 color;
 
-out vec3 vertexColor;
-
 uniform mat4 view;
+uniform mat4 projection;
+
+out vec3 vertexColor;
 
 void main()
 {
-	vec4 worldPosition = vec4(position, 1.0);
-	gl_Position = view * worldPosition;
+	gl_Position = projection * view * vec4(position, 1.0);
 	vertexColor = color;
 })";
 
@@ -87,9 +87,11 @@ void Engine::StopGLFW()
 
 bool Engine::Run()
 {
+	++frameIndex;
 	if (activeScene != nullptr)
 	{
 		activeScene->UpdateScene();
+		return glfwWindowShouldClose(activeScene->window);
 	}
 	return false;
 }
@@ -176,7 +178,7 @@ void Engine::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 //	glfwFocusWindow(window);
 //}
 
-Engine::Engine() : activeScene(0), clock(), fps(0)
+Engine::Engine() : activeScene(0), clock(), fps(0), frameIndex(0)
 {
 
 }

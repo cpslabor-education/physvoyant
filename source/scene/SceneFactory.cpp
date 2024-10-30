@@ -31,7 +31,7 @@ Scene* SceneFactory::SpheresCollide()
 	Engine* e = Engine::GetInstance();
 
 	Scene* scene = new Scene();
-	scene->objectTree = new OctTree<GameObject*>(NULLVECTOR, 3, 8);
+	scene->objectTree = new OcTree<GameObject*>(NULLVECTOR, 3, 8);
 
 	ObjectMover* mover = new ObjectMover();
 	mover->solverType = MovementSolver::Solvers::RungeKutta4;
@@ -89,10 +89,23 @@ Scene* SceneFactory::TonsOfSpheres()
 Scene* SceneFactory::CameraTest()
 {
 	Scene* s = new Scene();
-	s->SetupWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "test");
+	Engine::GetInstance()->SetActiveScene(s);
+	s->SetupWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Default window");
 
 	Camera* camera = new Camera();
-	camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
+	camera->transform.position.vector = VECTOR3(0, 0, -10);
+	camera->InitComponents();
+	GLuint shader = camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
+	camera->AttachShader(shader);
+	shader = camera->CompileShader(GL_FRAGMENT_SHADER, Engine::fragment_shader_text.c_str());
+	camera->AttachShader(shader);
+	camera->LinkProgram();
 	s->camera = camera;
-	return nullptr;
+
+	GameObject* cube = new GameObject();
+	TriangleRenderer square;
+	cube->components.AddComponent(&square);
+	s->AddObject(cube);
+	gladInstallGLDebug();
+	return s;
 }

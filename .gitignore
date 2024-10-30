@@ -420,6 +420,7 @@ FodyWeavers.xsd
 *.vsix
 
 /build/
-/cppcheck/physvoyant-cppcheck-build-dir/
+/cppcheck/
 /source/demo/
 /source/test/
+/doxygen/

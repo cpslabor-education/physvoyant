@@ -16,6 +16,7 @@ class Engine
 	uintStandard_t fps;
 public:
 	Clock clock;
+	uintStandard_t frameIndex;
 	static std::string shader_text;
 	static std::string fragment_shader_text;
 	static VECTOR3 upVector;

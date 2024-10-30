@@ -1,5 +1,6 @@
 #include "../glad/gl.h"
 #include "Scene.hpp"
+#define GLAD_GL_IMPLEMENTATION
 #include INCL_GLFW
 #include "../defines.hpp"
 
@@ -29,6 +30,7 @@ void Scene::UpdateScene()
 		gameObjects[i]->Update();
 	}
 	camera->Execute(this);
+	glfwSwapBuffers(window);
 }
 
 void Scene::AddObject(GameObject* object)

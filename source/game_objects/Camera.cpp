@@ -3,10 +3,12 @@
 #define GLAD_GL_IMPLEMENTATION
 #include INCL_GLFW
 #include INCL_ENGINE
+#include INCL_GLM
+#include <glm/gtc/type_ptr.hpp>
 
 //#include INCL_SCENE
 
-const VECTOR3 Camera::forward = { 0, 0, 1 };
+const VECTOR3 Camera::forward = { 0, 0.001, 1 };
 
 Camera::Camera() : program(0), vertexShader(0), fragmentShader(0), transform(), renderCollector()
 {
@@ -86,17 +88,46 @@ void* Camera::Execute(Scene* caller, void* params)
 {
 	if (caller->window != nullptr)
 	{
-		
+		glUseProgram(program);
+		glClearColor(0, 0, 0, 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-		// Set the data 
-		uintStandard_t bufferSize = 0;
-		std::vector<Vertex> verticies;
 		VECTOR3 target = transform.position.vector + forward * transform.position.GetRotation();
-		glm::mat4 view = glm::lookAt(transform.position.vector, target, Engine::upVector);
+		int width, height;
+		glfwGetWindowSize(caller->window, &width, &height);
+
+		glm::mat4 view = glm::identity<glm::mat4>(); //glm::lookAt(transform.position.vector, target, Engine::upVector);
+
+		float left = -1.0f;
+		float right = 1.0f;
+		float bottom = -1.0f;
+		float top = 1.0f;
+		float near = -1.0f;
+		float far = 1.0f;
+		glm::mat4 projection = glm::ortho(left, right, bottom, top, near, far); // glm::perspective(90.0, 1.0 * width / height, 1.0, 100.0);
 
 
-		glBufferData(GL_ARRAY_BUFFER, bufferSize * sizeof(float), verticies.data(), GL_DYNAMIC_DRAW);
+
+		const GLint projectionLocation = glGetUniformLocation(program, "projection");
+		const GLint viewLocation = glGetUniformLocation(program, "view");
+
+
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+
+		//glUniformMatrix4fv(
+		//	glGetUniformLocation(program, "projection"),
+		//	1,
+		//	GL_FALSE,
+		//	glm::value_ptr(projection)
+		//	);
+
+		for (std::list<IRenderable*>::iterator it = renderCollector.begin(); it != renderCollector.end(); ++it)
+		{
+			(*it)->Draw();
+		}
+
+		// glBufferData(GL_ARRAY_BUFFER, 0 * sizeof(float), verticies.data(), GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	return nullptr;

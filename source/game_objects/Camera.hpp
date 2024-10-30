@@ -11,18 +11,20 @@ class Camera;
 #include <vector>
 #include <list>
 
-class Camera : SceneComponentBase
+class Camera : public SceneComponentBase
 {
 	GLuint program;
 public:
 	GLuint vertexShader;
 	GLuint fragmentShader;
 	Transform transform;
-	std::list<GameObject*> renderCollector;
+	std::list<IRenderable*> renderCollector;
 	const static VECTOR3 forward;
 
 	Camera();
 	~Camera();
+
+	GLuint GetProgram() { return program; };
 
 	void InitComponents();
 	//void RebuildVertexBuffer(uintStandard_t newSize);

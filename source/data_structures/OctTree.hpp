@@ -2,7 +2,7 @@
 #define OCTTREE
 
 template <typename T>
-class OctTree;
+class OcTree;
 
 
 #include "../defines.hpp"
@@ -10,7 +10,7 @@ class OctTree;
 #include <list>
 
 template <typename T>
-class OctTree
+class OcTree
 {
 	VECTOR3 center;
 	uintStandard_t chunkSize;
@@ -40,11 +40,11 @@ class OctTree
 	}
 
 public:
-	OctTree() : center(NULLVECTOR), chunkSize(0), depth(0), elements()
+	OcTree() : center(NULLVECTOR), chunkSize(0), depth(0), elements()
 	{
 
 	}
-	OctTree(VECTOR3& center, uintStandard_t depth, uintStandard_t chunkSize) : center(center), chunkSize(chunkSize), depth(depth), elements(glm::sqrt(1 << (DIMENSIONS * depth)))
+	OcTree(VECTOR3& center, uintStandard_t depth, uintStandard_t chunkSize) : center(center), chunkSize(chunkSize), depth(depth), elements(glm::sqrt(1 << (DIMENSIONS * depth)))
 	{
 		assert(depth - 1 < 9);
 		assert(chunkSize % 2 == 0);
@@ -54,7 +54,7 @@ public:
 			elements.push_back(nullptr);
 		}
 	}
-	~OctTree() = default;
+	~OcTree() = default;
 
 	std::list<T>* GetList(uintStandard_t index)
 	{

@@ -9,7 +9,7 @@ public:
 	IRenderable() = default;
 	virtual ~IRenderable() = default;
 
-	virtual VertexBuffer* GetVertexBuffer(GameObject* caller) = 0;
+	virtual void Draw() = 0;
 };
 
 
