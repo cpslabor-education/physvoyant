@@ -98,12 +98,12 @@ void* Camera::Execute(Scene* caller, void* params)
 
 		glm::mat4 view = glm::identity<glm::mat4>(); //glm::lookAt(transform.position.vector, target, Engine::upVector);
 
-		float left = -1.0f;
-		float right = 1.0f;
-		float bottom = -1.0f;
-		float top = 1.0f;
-		float near = -1.0f;
-		float far = 1.0f;
+		float left = -5.0f;
+		float right = 5.0f;
+		float bottom = -5.0f;
+		float top = 5.0f;
+		float near = -5.0f;
+		float far = 5.0f;
 		glm::mat4 projection = glm::ortho(left, right, bottom, top, near, far); // glm::perspective(90.0, 1.0 * width / height, 1.0, 100.0);
 
 

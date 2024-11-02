@@ -37,8 +37,8 @@ int main()
 		e->Time(60);
 	}
 
-	Engine::StopGLFW();
 	delete e->GetActiveScene();
+	Engine::StopGLFW();
 	delete e;
 	std::cout << Engine::MemCheck();
 	return 0;

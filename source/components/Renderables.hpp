@@ -40,10 +40,10 @@ public:
 
 class SquareRenderer : public RenderableBase
 {
-public:
 	VertexBuffer buffer;
+public:
 	VECTOR3 halfSides;
-	typedef std::array<VECTOR3, 1 << DIMENSIONS> cornerArray_t;
+	typedef std::array<VERTEX_VECTOR3, 1 << DIMENSIONS> cornerArray_t;
 
 	SquareRenderer();
 	SquareRenderer(const SquareRenderer& other);

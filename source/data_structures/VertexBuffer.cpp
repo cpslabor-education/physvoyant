@@ -2,21 +2,24 @@
 #include "VertexBuffer.hpp"
 #include INCL_ENGINE
 
-VertexBuffer::VertexBuffer() : verticies(), VAO(0), VBO(0)
+VertexBuffer::VertexBuffer() : verticies(), VAO(0), VBO(0), IBO(0)
 {
 }
 
 VertexBuffer::~VertexBuffer()
 {
+	DeleteBuffers();
 }
 
 void VertexBuffer::Setup()
 {
+	CreateVertexArray();
+	CreateVertexBuffer();
+	CreateIndexBuffer();
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	// Define the vertex attributes (assuming 2D vertices with x, y)
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
 	GLuint program = Engine::GetInstance()->GetActiveScene()->camera->GetProgram();
 
@@ -34,37 +37,49 @@ void VertexBuffer::Setup()
 	glBindVertexArray(0);
 }
 
-void VertexBuffer::SetSize()
-{
-	BindVAO();
-	BindVBO();
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-}
-
 GLuint VertexBuffer::CreateVertexBuffer()
 {
-	glGenBuffers(1, &VBO);
+	if (VBO == 0)
+	{
+		glGenBuffers(1, &VBO);
+	}
 	return VBO;
 }
 
 GLuint VertexBuffer::CreateVertexArray()
 {
-	glGenVertexArrays(1, &VAO);
-	return VBO;
+	if (VAO == 0)
+	{
+		glGenVertexArrays(1, &VAO);
+	}
+	return VAO;
+}
+
+GLuint VertexBuffer::CreateIndexBuffer()
+{
+	if (IBO == 0)
+	{
+		glGenBuffers(1, &IBO);
+	}
+	return IBO;
 }
 
 void VertexBuffer::PassData()
 {
 	BindVAO();
 	BindVBO();
-	glBufferData(GL_ARRAY_BUFFER, GetBufferSize(), verticies.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, GetVertexBufferSize(), verticies.data(), GL_STATIC_DRAW);
+	if (indices.size() != 0)
+	{
+		BindIBO();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+	}
 }
 
 void VertexBuffer::DeleteBuffers()
 {
+	verticies.clear();
+	indices.clear();
 	if (VBO != 0)
 	{
 		glDeleteBuffers(1, &VBO);
@@ -74,6 +89,11 @@ void VertexBuffer::DeleteBuffers()
 	{
 		glDeleteVertexArrays(1, &VAO);
 		VAO = 0;
+	}
+	if (IBO != 0)
+	{
+		glDeleteBuffers(1, &IBO);
+		IBO = 0;
 	}
 }
 
@@ -87,6 +107,18 @@ void VertexBuffer::BindVBO()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 }
 
+void VertexBuffer::BindIBO()
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+}
+
+void VertexBuffer::BindAll()
+{
+	BindVAO();
+	BindVBO();
+	BindIBO();
+}
+
 void VertexBuffer::Unbind()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -98,12 +130,12 @@ void VertexBuffer::AddVertex(Vertex& vertex)
 	verticies.push_back(std::move(vertex));
 }
 
-std::vector<Vertex>* VertexBuffer::GetBuffer()
-{
-	return &verticies;
-}
-
-size_t VertexBuffer::GetBufferSize()
+size_t VertexBuffer::GetVertexBufferSize()
 {
 	return verticies.size() * sizeof(Vertex);
+}
+
+size_t VertexBuffer::GetIndexBufferSize()
+{
+	return indices.size() * sizeof(GLuint);
 }

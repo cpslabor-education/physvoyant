@@ -90,7 +90,7 @@ Scene* SceneFactory::CameraTest()
 {
 	Scene* s = new Scene();
 	Engine::GetInstance()->SetActiveScene(s);
-	s->SetupWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Default window");
+	s->SetupWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Cube test");
 
 	Camera* camera = new Camera();
 	camera->transform.position.vector = VECTOR3(0, 0, -10);
@@ -103,7 +103,7 @@ Scene* SceneFactory::CameraTest()
 	s->camera = camera;
 
 	GameObject* cube = new GameObject();
-	TriangleRenderer square;
+	SquareRenderer square;
 	cube->components.AddComponent(&square);
 	s->AddObject(cube);
 	gladInstallGLDebug();

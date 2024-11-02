@@ -11,26 +11,32 @@
 
 class VertexBuffer
 {
-	std::vector<Vertex> verticies;
 	GLuint VBO;
 	GLuint VAO;
+	GLuint IBO;
 public:
+	std::vector<Vertex> verticies;
+	std::vector<GLuint> indices;
+
 	VertexBuffer();
 	~VertexBuffer();
 
 	void Setup();
-	void SetSize();
 
 	GLuint CreateVertexBuffer();
 	GLuint CreateVertexArray();
+	GLuint CreateIndexBuffer();
+
 	void PassData();
 	void DeleteBuffers();
 	void BindVAO();
 	void BindVBO();
+	void BindIBO();
+	void BindAll();
 	void Unbind();
 	void AddVertex(Vertex& vertex);
-	std::vector<Vertex>* GetBuffer();
-	size_t GetBufferSize();
+	size_t GetVertexBufferSize();
+	size_t GetIndexBufferSize();
 };
 
 
