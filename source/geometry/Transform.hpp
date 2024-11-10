@@ -11,6 +11,8 @@ class Transform
 {
 public:
 	PosRot position;
+	PosRot* positionLock;
+	PosRot positionOffset;
 	PosRot velocity;
 	PosRot acceleration;
 
@@ -19,7 +21,7 @@ public:
 	// TODO: apply force, apply motion
 
 	// Constructors
-	Transform() : position(0), velocity(0), acceleration(0), mass(0)
+	Transform() : position(0), positionLock(nullptr), positionOffset(0), velocity(0), acceleration(0), mass(0)
 	{
 	}
 
@@ -40,11 +42,11 @@ public:
 
 	void ApplyForce(VECTOR3 force)
 	{
-		acceleration.vector += force;
+		acceleration.vector += force / mass;
 	}
 	void ApplyForce(VECTOR3 forceNormal, realStandard_t strength)
 	{
-		acceleration.vector += glm::normalize(forceNormal) * strength;
+		acceleration.vector += glm::normalize(forceNormal) * strength / mass;
 	}
 };
 

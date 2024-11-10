@@ -23,10 +23,13 @@ public:
 // Nope, Geodesic Dome can wait
 class SphereRenderer : public RenderableBase
 {
-	PosRot* positionPtr;
+	VERTEX_VECTOR3 GetPointOnCircle(uintStandard_t i, uintStandard_t N);
+	VertexBuffer buffer;
+	void MakeCircle(PosRot* offset = nullptr, uintStandard_t N = 24);
 public:
+	realStandard_t radius;
 	SphereRenderer();
-
+	SphereRenderer(const SphereRenderer& other);
 	~SphereRenderer() = default;
 
 

@@ -25,12 +25,16 @@ void VertexBuffer::Setup()
 
 	const GLint positionLocation = glGetAttribLocation(program, "position");
 	const GLint colorLocation = glGetAttribLocation(program, "color");
+	const GLint normalLocation = glGetAttribLocation(program, "normal");
 
 	glEnableVertexAttribArray(positionLocation);
 	glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 
 	glEnableVertexAttribArray(colorLocation);
 	glVertexAttribPointer(colorLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+
+	glEnableVertexAttribArray(normalLocation);
+	glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -69,6 +73,7 @@ void VertexBuffer::PassData()
 	BindVAO();
 	BindVBO();
 	glBufferData(GL_ARRAY_BUFFER, GetVertexBufferSize(), verticies.data(), GL_STATIC_DRAW);
+
 	if (indices.size() != 0)
 	{
 		BindIBO();

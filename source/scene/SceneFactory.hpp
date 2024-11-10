@@ -11,9 +11,11 @@ class SceneFactory
 public:
 	static Scene* GetDefaultScene();
 	static Scene* FloatingShpehere();
-	static Scene* SpheresCollide();
+	static Scene* CubesCollide();
 	static Scene* TonsOfSpheres();
 	static Scene* CameraTest();
+	static Scene* ThreeBodies();
+	static Scene* OrbitingPlanet();
 };
 
 

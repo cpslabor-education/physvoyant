@@ -96,7 +96,7 @@ void* Camera::Execute(Scene* caller, void* params)
 		int width, height;
 		glfwGetWindowSize(caller->window, &width, &height);
 
-		glm::mat4 view = glm::identity<glm::mat4>(); //glm::lookAt(transform.position.vector, target, Engine::upVector);
+		glm::mat4 view = glm::lookAt(transform.position.vector, target, Engine::upVector);
 
 		float left = -5.0f;
 		float right = 5.0f;
@@ -104,7 +104,8 @@ void* Camera::Execute(Scene* caller, void* params)
 		float top = 5.0f;
 		float near = -5.0f;
 		float far = 5.0f;
-		glm::mat4 projection = glm::ortho(left, right, bottom, top, near, far); // glm::perspective(90.0, 1.0 * width / height, 1.0, 100.0);
+		// glm::mat4 projection = glm::ortho(left, right, bottom, top, near, far); // glm::perspective(90.0, 1.0 * width / height, 1.0, 100.0);
+		glm::mat4 projection = glm::perspective(90.0, 1.0 * width / height, 0.1, 100.0);
 
 
 

@@ -58,5 +58,9 @@ void Scene::SetupWindow(int width, int height, char* title)
 	glfwMakeContextCurrent(window);
 	Engine::WriteInfo("Glad version:");
 	Engine::WriteInfo(gladLoadGL(glfwGetProcAddress));
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
 }
 

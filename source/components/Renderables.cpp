@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+
 TriangleRenderer::TriangleRenderer()
 {
 
@@ -63,20 +64,104 @@ IComponent* TriangleRenderer::Clone(void* params) const
 }
 
 
+VERTEX_VECTOR3 SphereRenderer::GetPointOnCircle(uintStandard_t i, uintStandard_t N)
+{
+	VERTEX_VECTOR3 circlePoint = VERTEX_VECTOR3(0);
+	circlePoint.x += glm::cos(1.0 * i / N * glm::pi<realStandard_t>() * 2.0) * radius;
+	circlePoint.y += glm::sin(1.0 * i / N * glm::pi<realStandard_t>() * 2.0) * radius;
+	return circlePoint;
+}
 
-SphereRenderer::SphereRenderer() : positionPtr(nullptr)
+void SphereRenderer::MakeCircle(PosRot* offset, uintStandard_t N)
+{
+	PosRot actualOffset;
+	if (offset != nullptr)
+	{
+		actualOffset = *offset;
+	}
+	Vertex v;
+	v.position = actualOffset.vector;
+	v.color = VERTEX_VECTOR3(1);
+	Camera* camera = Engine::GetInstance()->GetActiveScene()->camera;
+	v.normal = camera->transform.position.vector - actualOffset.vector;
+
+	if (buffer.verticies.empty())
+	{
+		buffer.AddVertex(v);
+	}
+	else
+	{
+		buffer.verticies[0] = v;
+	}
+	VECTOR3 cameraDirection = glm::normalize(v.normal);
+	glm::mat4 rotationMatrix = glm::identity<glm::mat4>();
+
+	if (cameraDirection != Engine::upVector)
+	{
+		realStandard_t dotProduct = glm::dot(Engine::upVector, cameraDirection);
+		realStandard_t angle = -glm::acos(dotProduct);
+		
+		VECTOR3 rotationAxis = glm::normalize(glm::cross(Engine::upVector, cameraDirection));
+
+		rotationMatrix = glm::rotate(glm::mat<4, 4, realStandard_t>(1.0f), angle, rotationAxis);
+	}
+
+	for (size_t i = 1; i < N + 1; i++)
+	{
+		v.position = glm::vec4(GetPointOnCircle(i, N), 0.0f) * rotationMatrix;
+		v.position += actualOffset.vector;
+		if (buffer.verticies.size() == i)
+		{
+			buffer.AddVertex(v);
+		}
+		else
+		{
+			buffer.verticies[i] = v;
+		}
+	}
+
+	if (buffer.indices.empty())
+	{
+		for (uintStandard_t i = 0; i < N; ++i)
+		{
+			buffer.indices.push_back(0);
+			buffer.indices.push_back(i);
+			buffer.indices.push_back(i + 1);
+		}
+		buffer.indices.push_back(0);
+		buffer.indices.push_back(N);
+		buffer.indices.push_back(1);
+	}
+}
+
+SphereRenderer::SphereRenderer() : radius(1)
 {
 
 }
 
+SphereRenderer::SphereRenderer(const SphereRenderer& other) : radius(other.radius)
+{
+	buffer.CreateVertexBuffer();
+	buffer.CreateVertexArray();
+	buffer.CreateIndexBuffer();
+	buffer.Setup();
+
+	MakeCircle();
+}
+
 void* SphereRenderer::Execute(GameObject* caller, void* params)
 {
-	this->positionPtr = &(caller->transform.position);
+	MakeCircle(&caller->transform.position);
 	return nullptr;
 }
 
 void SphereRenderer::Draw()
 {
+	buffer.PassData();
+
+	glDrawElements(GL_TRIANGLES, buffer.indices.size(), GL_UNSIGNED_INT, nullptr);
+
+	buffer.Unbind();
 }
 
 SquareRenderer::SquareRenderer() : buffer(), halfSides(1)
@@ -84,7 +169,7 @@ SquareRenderer::SquareRenderer() : buffer(), halfSides(1)
 
 }
 
-SquareRenderer::SquareRenderer(const SquareRenderer& other) : buffer(), halfSides(2)
+SquareRenderer::SquareRenderer(const SquareRenderer& other) : buffer(), halfSides(other.halfSides)
 {
 	buffer.CreateVertexBuffer();
 	buffer.CreateVertexArray();
@@ -97,48 +182,49 @@ SquareRenderer::SquareRenderer(const SquareRenderer& other) : buffer(), halfSide
 		switch (i % 4)
 		{
 			case 0:
-				v.color = VECTOR3(1, 0, 0);
+				v.color = VERTEX_VECTOR3(1, 0, 0);
 				break;
 			case 1:
-				v.color = VECTOR3(0, 1, 0);
+				v.color = VERTEX_VECTOR3(0, 1, 0);
 				break;
 			case 2:
-				v.color = VECTOR3(0, 0, 1);
+				v.color = VERTEX_VECTOR3(0, 0, 1);
 				break;
 			case 3:
-				v.color = VECTOR3(1, 1, 1);
+				v.color = VERTEX_VECTOR3(1, 1, 1);
 				break;
 			default:
 				break;
 		}
 		v.position = corners[i];
+		v.normal = v.position;
 		buffer.AddVertex(v);
 	}
 	buffer.indices =
 	{
 		// Bottom face
-		//0, 1, 2,
-		//3, 1, 2,
+		0, 2, 1,
+		2, 3, 1,
 
 		// Back face
-		1, 0, 5,
-		4, 0, 5,
+		1, 5, 0,
+		5, 4, 0,
 
 		// Left face
 		2, 0, 6,
-		4, 0, 6,
+		4, 6, 0,
 
 		// Right face
-		3, 1, 7,
-		5, 1, 7,
+		3, 7, 1,
+		7, 5, 1,
 
 		// Top face
-		4, 6, 5,
-		7, 6, 5,
+		4, 5, 6,
+		5, 7, 6,
 
 		// Front face
-		3, 2, 7,
-		6, 2, 7
+		7, 3, 2,
+		6, 7, 2
 	};
 }
 
@@ -161,17 +247,19 @@ SquareRenderer::cornerArray_t SquareRenderer::GetCorners(PosRot* center)
 
 void* SquareRenderer::Execute(GameObject* caller, void* params)
 {
-	QUATERNION& rot = caller->transform.position.GetRotation();
+	//QUATERNION& rot = caller->transform.position.GetRotation();
 
-	rot = glm::rotate(rot, 0.05, VECTOR3(1, 1, 1));
+	//rot = glm::rotate(rot, 0.05, VECTOR3(1, 1, 1));
 
-	caller->transform.position.SetRotation(rot);
+	//caller->transform.position.SetRotation(rot);
 
 	cornerArray_t corners = GetCorners(&caller->transform.position);
+	VERTEX_VECTOR3 center = caller->transform.position.vector;
 	for (size_t i = 0; i < (size_t)1 << DIMENSIONS; i++)
 	{
 		VERTEX_VECTOR3 v = corners[i];
 		buffer.verticies[i].position = v;
+		buffer.verticies[i].normal = v - center;
 	}
 	return nullptr;
 }
@@ -186,17 +274,6 @@ void SquareRenderer::Draw()
 	buffer.PassData();
 
 	glDrawElements(GL_TRIANGLES, buffer.indices.size(), GL_UNSIGNED_INT, nullptr);
-	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, &buffer.indices);
 
 	buffer.Unbind();
-
-	//GLuint index = buffer.GetBufferID();
-
-	//glBufferData(GL_ARRAY_BUFFER, buffer.GetVertexBufferSize(), buffer.GetBuffer()->data(), GL_DYNAMIC_DRAW);
-
-	//// 1282
-	//glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), buffer.GetBuffer()->data());
-	//glEnableVertexAttribArray(index);
-
-	//glDrawArrays(GL_POINTS, 0, 8);
 }

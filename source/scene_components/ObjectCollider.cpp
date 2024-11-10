@@ -31,8 +31,12 @@ void* ObjectCollider::Execute(Scene* caller, void* params)
 				else
 				{
 					// collision
-					in->transform.ApplyForce(-inResult);
-					out->transform.ApplyForce(inResult);
+					VECTOR3 projection = glm::dot(in->transform.velocity.vector, inResult) / glm::dot(inResult, inResult) * inResult;
+					VECTOR3 reflected = in->transform.velocity.vector - 2.0 * projection;
+					in->transform.velocity.vector = reflected;
+					out->transform.velocity.vector = -reflected;
+					in->transform.position.vector -= inResult / 2.0;
+					out->transform.position.vector += inResult / 2.0;
 				}
 			}
 		}

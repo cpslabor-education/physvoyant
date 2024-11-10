@@ -13,16 +13,19 @@ R"(
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 color;
+layout(location = 2) in vec3 normal;
 
 uniform mat4 view;
 uniform mat4 projection;
 
 out vec3 vertexColor;
+out vec3 fragNormal; 
 
 void main()
 {
 	gl_Position = projection * view * vec4(position, 1.0);
 	vertexColor = color;
+	fragNormal = normalize(mat3(view) * normal);
 })";
 
 std::string Engine::fragment_shader_text =
@@ -30,11 +33,15 @@ R"(
 #version 330 core
 
 in vec3 vertexColor;
+in vec3 fragNormal;
 out vec4 fragColor;
 
 void main() 
 {
-	fragColor = vec4(vertexColor, 1.0);
+	vec3 norm = normalize(fragNormal);
+	vec3 colorVariation = vec3(0.5) + 0.5 * norm;
+
+	fragColor = vec4(vertexColor * colorVariation, 1.0);
 }
 )";
 
@@ -91,9 +98,9 @@ bool Engine::Run()
 	if (activeScene != nullptr)
 	{
 		activeScene->UpdateScene();
-		return glfwWindowShouldClose(activeScene->window);
+		return glfwWindowShouldClose(activeScene->window) || manualExit;
 	}
-	return false;
+	return true;
 }
 
 void Engine::Time(uintStandard_t fps)
@@ -117,6 +124,71 @@ int Engine::MemCheck()
 
 void Engine::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (key == GLFW_KEY_ESCAPE)
+	{
+		WriteInfo("Exit via key press");
+		Engine::GetInstance()->manualExit = true;
+	}
+
+	if (key == GLFW_KEY_W)
+	{
+		Engine::GetInstance()->activeScene->camera->transform.position.vector += VECTOR3(0, 0.5, 0);
+	}
+	else if (key == GLFW_KEY_S)
+	{
+		Engine::GetInstance()->activeScene->camera->transform.position.vector += VECTOR3(0, -0.5, 0);
+	}
+	if (key == GLFW_KEY_A)
+	{
+		Engine::GetInstance()->activeScene->camera->transform.position.vector += VECTOR3(-0.5, 0, 0);
+	}
+	else if (key == GLFW_KEY_D)
+	{
+		Engine::GetInstance()->activeScene->camera->transform.position.vector += VECTOR3(0.5, 0, 0);
+	}
+	if (key == GLFW_KEY_E)
+	{
+		Engine::GetInstance()->activeScene->camera->transform.position.vector += VECTOR3(0, 0, 0.5);
+	}
+	else if (key == GLFW_KEY_Q)
+	{
+		Engine::GetInstance()->activeScene->camera->transform.position.vector += VECTOR3(0, 0, -0.5);
+	}
+
+	if (key == GLFW_KEY_UP)
+	{
+		QUATERNION rot = Engine::GetInstance()->activeScene->camera->transform.position.GetRotation();
+
+		rot = glm::rotate(rot, -0.05, VECTOR3(1, 0, 0));
+
+		Engine::GetInstance()->activeScene->camera->transform.position.SetRotation(rot);
+	}
+	else if (key == GLFW_KEY_DOWN)
+	{
+		QUATERNION rot = Engine::GetInstance()->activeScene->camera->transform.position.GetRotation();
+
+		rot = glm::rotate(rot, 0.05, VECTOR3(1, 0, 0));
+
+		Engine::GetInstance()->activeScene->camera->transform.position.SetRotation(rot);
+	}
+	if (key == GLFW_KEY_LEFT)
+	{
+		QUATERNION rot = Engine::GetInstance()->activeScene->camera->transform.position.GetRotation();
+
+		rot = glm::rotate(rot, -0.05, VECTOR3(0, 0, 1));
+
+		Engine::GetInstance()->activeScene->camera->transform.position.SetRotation(rot);
+	}
+	else if (key == GLFW_KEY_RIGHT)
+	{
+		QUATERNION rot = Engine::GetInstance()->activeScene->camera->transform.position.GetRotation();
+
+		rot = glm::rotate(rot, 0.05, VECTOR3(0, 0, 1));
+
+		Engine::GetInstance()->activeScene->camera->transform.position.SetRotation(rot);
+	}
+
+
 #if DEBUG_LEVEL >= 1
 	WriteInfo("Key pressed from:");
 	WriteInfo(window);
@@ -178,7 +250,7 @@ void Engine::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 //	glfwFocusWindow(window);
 //}
 
-Engine::Engine() : activeScene(0), clock(), fps(0), frameIndex(0)
+Engine::Engine() : activeScene(0), clock(), fps(0), frameIndex(0), manualExit(false)
 {
 
 }

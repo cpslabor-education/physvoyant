@@ -17,6 +17,7 @@ class Engine
 public:
 	Clock clock;
 	uintStandard_t frameIndex;
+	bool manualExit;
 	static std::string shader_text;
 	static std::string fragment_shader_text;
 	static VECTOR3 upVector;

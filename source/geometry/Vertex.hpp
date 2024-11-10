@@ -7,7 +7,7 @@ struct Vertex
 {
 	VERTEX_VECTOR3 position;
 	VERTEX_VECTOR3 color;
-	// VECTOR3 normal; // no Phong shading now
+	VERTEX_VECTOR3 normal;
 };
 
 

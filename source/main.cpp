@@ -26,7 +26,7 @@ int main()
 	e->clock.SetPhysicsTimeStep(TO_TIME_UNIT(0.1));
 	e->SetFPS(0);
 
-	e->SetActiveScene(SceneFactory::CameraTest());
+	e->SetActiveScene(SceneFactory::ThreeBodies());
 
 	bool close = false;
 
