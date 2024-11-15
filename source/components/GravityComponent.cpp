@@ -18,6 +18,10 @@ void* GravityComponent::Execute(GameObject* caller, void* params)
 		if (other != nullptr && other != this)
 		{
 			realStandard_t dist = glm::distance(caller->transform.position.vector, helper[i]->transform.position.vector);
+			if (dist <= SNE16)
+			{
+				continue;
+			}
 			realStandard_t force = gravitationalConstant * ((this->mass * other->mass) / (dist * dist)) / other->mass;
 			VECTOR3 pull = (caller->transform.position.vector - helper[i]->transform.position.vector) * force;
 			helper[i]->transform.acceleration.vector += pull;

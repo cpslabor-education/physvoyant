@@ -90,11 +90,11 @@ public:
 		VECTOR3 delta = (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0 * deltaTime;
 		QUATERNION deltaRotation = (q1 + 2.0 * q2 + 2.0 * q3 + q4) / 6.0 * deltaTime;
 
-		transform->position.vector = ApplyDelta(transform->position.vector, delta, deltaTime);
-		transform->position.SetRotation(ApplyRotationDelta(transform->position.GetRotation(), deltaRotation, deltaTime));
+		transform->position.vector = transform->position.vector + delta * deltaTime;
+		transform->position.SetRotation(ApplyRotationDelta(transform->position.GetRotation(), deltaRotation, 1));
 
-		transform->velocity.vector = delta;
-		transform->velocity.SetRotation(deltaRotation);
+		//transform->velocity.vector = delta;
+		//transform->velocity.SetRotation(deltaRotation);
 	}
 
 

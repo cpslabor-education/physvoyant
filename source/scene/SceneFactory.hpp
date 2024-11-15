@@ -16,6 +16,8 @@ public:
 	static Scene* CameraTest();
 	static Scene* ThreeBodies();
 	static Scene* OrbitingPlanet();
+	static Scene* NBodyProblem();
+	static Scene* NBodyOptimized();
 };
 
 

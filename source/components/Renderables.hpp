@@ -20,7 +20,6 @@ public:
 
 };
 
-// Nope, Geodesic Dome can wait
 class SphereRenderer : public RenderableBase
 {
 	VERTEX_VECTOR3 GetPointOnCircle(uintStandard_t i, uintStandard_t N);

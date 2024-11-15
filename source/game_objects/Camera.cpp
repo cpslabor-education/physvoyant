@@ -95,7 +95,10 @@ void* Camera::Execute(Scene* caller, void* params)
 		VECTOR3 target = transform.position.vector + forward * transform.position.GetRotation();
 		int width, height;
 		glfwGetWindowSize(caller->window, &width, &height);
-
+		if (width * height == 0)
+		{
+			return nullptr;
+		}
 		glm::mat4 view = glm::lookAt(transform.position.vector, target, Engine::upVector);
 
 		float left = -5.0f;
@@ -105,9 +108,9 @@ void* Camera::Execute(Scene* caller, void* params)
 		float near = -5.0f;
 		float far = 5.0f;
 		// glm::mat4 projection = glm::ortho(left, right, bottom, top, near, far); // glm::perspective(90.0, 1.0 * width / height, 1.0, 100.0);
-		glm::mat4 projection = glm::perspective(90.0, 1.0 * width / height, 0.1, 100.0);
+		glm::mat4 projection = glm::perspective(glm::pi<realStandard_t>() / 2, 1.0 * width / height, 0.1, 100.0);
 
-
+		glViewport(0, 0, width, height);
 
 		const GLint projectionLocation = glGetUniformLocation(program, "projection");
 		const GLint viewLocation = glGetUniformLocation(program, "view");
