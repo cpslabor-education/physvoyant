@@ -4,26 +4,41 @@
 #include INCL_COMPONENTS
 #include INCL_GLFW
 
-Scene* SceneFactory::FloatingShpehere()
+Scene* SceneFactory::SceneTester()
 {
-	Engine* e = Engine::GetInstance();
+	std::string tests[] =
+	{
+		"Cubes Collide",
+		"Three Bodies",
+		"Orbiting Planet",
+		"NBody Problem",
+		"NBody Optimized"
+	};
+	Scene* (*functions[])() =
+	{
+		CubesCollide,
+		ThreeBodies,
+		OrbitingPlanet,
+		NBodyProblem,
+		NBodyOptimized
+	};
 
-	Scene* scene = new Scene();
+	std::cout << "=============================================" << std::endl;
+	std::cout << "Available tests:" << std::endl;
+	for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++)
+	{
+		std::cout << i << ": " << tests[i] << std::endl;
+	}
+	int index = -1;
 
-	SphereCollider* c = new SphereCollider(1);
-	GameObject* tmp = new GameObject();
-	tmp->transform.velocity.vector = VECTOR3(0.1);
-	tmp->components.AddComponent(c);
-	scene->AddObject(tmp);
-	delete c;
-
-	ObjectMover* mover = new ObjectMover();
-	mover->solverType = MovementSolver::Solvers::RungeKutta4;
-	mover->leapfrogSteps = 2;
-	scene->components.AddComponent(mover);
-	delete mover;
-
-	return scene;
+	std::cout << "Select index (-1 to exit): ";
+	std::cin >> index;
+	Scene* testScene = nullptr;
+	if (index >= 0 && index < sizeof(tests) / sizeof(tests[0]))
+	{
+		testScene = (*functions[index])();
+	}
+	return testScene;
 }
 
 Scene* SceneFactory::CubesCollide()
@@ -81,30 +96,6 @@ Scene* SceneFactory::CubesCollide()
 	return scene;
 }
 
-Scene* SceneFactory::TonsOfSpheres()
-{
-	Engine* e = Engine::GetInstance();
-	srand(1);
-	Scene* scene = new Scene();
-	GameObject* tmp = nullptr;
-	SphereCollider* c = new SphereCollider();
-	for (size_t i = 0; i < 2500; i++)
-	{
-		tmp = new GameObject();
-		tmp->transform.velocity.vector = VECTOR3(rand() - RAND_MAX / 2, rand() - RAND_MAX / 2, rand() - RAND_MAX / 2);
-		tmp->transform.position.vector = VECTOR3(0, 0, 0);
-		tmp->components.AddComponent(c);
-		scene->AddObject(tmp);
-	}
-	delete c;
-	ObjectMover* mover = new ObjectMover();
-	mover->solverType = MovementSolver::Solvers::RungeKutta4;
-	mover->leapfrogSteps = 2;
-	scene->components.AddComponent(mover);
-	delete mover;
-	return scene;
-}
-
 Scene* SceneFactory::CameraTest()
 {
 	Scene* s = new Scene();
@@ -112,7 +103,9 @@ Scene* SceneFactory::CameraTest()
 	s->SetupWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Triangle test");
 
 	Camera* camera = new Camera();
+	camera->ortho = true;
 	camera->transform.position.vector = VECTOR3(0, 0, -5);
+	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -0.1, VECTOR3(1, 0, 0)));
 	camera->InitComponents();
 	GLuint shader = camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
 	camera->AttachShader(shader);
@@ -142,7 +135,7 @@ Scene* SceneFactory::ThreeBodies()
 
 	Camera* camera = new Camera();
 	camera->transform.position.vector = VECTOR3(0, 0, 5);
-	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() + 0.1, VECTOR3(1, 0, 0)));
+	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() - 0.1, VECTOR3(1, 0, 0)));
 	camera->InitComponents();
 	GLuint shader = camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
 	camera->AttachShader(shader);
@@ -202,7 +195,7 @@ Scene* SceneFactory::OrbitingPlanet()
 
 	Camera* camera = new Camera();
 	camera->transform.position.vector = VECTOR3(0, 0, 2);
-	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() + 0.1, VECTOR3(1, 0, 0)));
+	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() - 0.1, VECTOR3(1, 0, 0)));
 	camera->InitComponents();
 	GLuint shader = camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
 	camera->AttachShader(shader);
@@ -253,7 +246,7 @@ Scene* SceneFactory::NBodyProblem()
 
 	Camera* camera = new Camera();
 	camera->transform.position.vector = VECTOR3(0, 0, 20);
-	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() + 0.1, VECTOR3(1, 0, 0)));
+	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() - 0.1, VECTOR3(1, 0, 0)));
 	camera->InitComponents();
 	GLuint shader = camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
 	camera->AttachShader(shader);
@@ -300,7 +293,7 @@ Scene* SceneFactory::NBodyOptimized()
 
 	Camera* camera = new Camera();
 	camera->transform.position.vector = VECTOR3(0, 0, 20);
-	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() + 0.1, VECTOR3(1, 0, 0)));
+	camera->transform.position.SetRotation(glm::rotate(glm::identity<QUATERNION>(), -glm::pi<realStandard_t>() - 0.1, VECTOR3(1, 0, 0)));
 	camera->InitComponents();
 	GLuint shader = camera->CompileShader(GL_VERTEX_SHADER, Engine::shader_text.c_str());
 	camera->AttachShader(shader);

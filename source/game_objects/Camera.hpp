@@ -19,6 +19,7 @@ public:
 	GLuint fragmentShader;
 	Transform transform;
 	std::list<IRenderable*> renderCollector;
+	bool ortho;
 	const static VECTOR3 forward;
 
 	Camera();

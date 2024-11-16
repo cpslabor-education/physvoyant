@@ -10,7 +10,7 @@
 
 const VECTOR3 Camera::forward = { 0, 0.001, 1 };
 
-Camera::Camera() : program(0), vertexShader(0), fragmentShader(0), transform(), renderCollector()
+Camera::Camera() : program(0), vertexShader(0), fragmentShader(0), transform(), renderCollector(), ortho(false)
 {
 
 }
@@ -101,30 +101,29 @@ void* Camera::Execute(Scene* caller, void* params)
 		}
 		glm::mat4 view = glm::lookAt(transform.position.vector, target, Engine::upVector);
 
-		float left = -5.0f;
-		float right = 5.0f;
-		float bottom = -5.0f;
-		float top = 5.0f;
-		float near = -5.0f;
-		float far = 5.0f;
-		// glm::mat4 projection = glm::ortho(left, right, bottom, top, near, far); // glm::perspective(90.0, 1.0 * width / height, 1.0, 100.0);
-		glm::mat4 projection = glm::perspective(glm::pi<realStandard_t>() / 2, 1.0 * width / height, 0.1, 100.0);
+		glm::mat4 projection;
+		if (ortho)
+		{
+			realStandard_t left = -5.0f;
+			realStandard_t right = 5.0f;
+			realStandard_t bottom = -5.0f;
+			realStandard_t top = 5.0f;
+			realStandard_t near = -5.0f;
+			realStandard_t far = 5.0f;
+			projection = glm::ortho(left, right, bottom, top, near, far); // glm::perspective(90.0, 1.0 * width / height, 1.0, 100.0);
+		}
+		else
+		{
+			projection = glm::perspective(glm::pi<realStandard_t>() / 2, 1.0 * width / height, 0.1, 100.0);
+		}
 
 		glViewport(0, 0, width, height);
 
 		const GLint projectionLocation = glGetUniformLocation(program, "projection");
 		const GLint viewLocation = glGetUniformLocation(program, "view");
 
-
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-
-		//glUniformMatrix4fv(
-		//	glGetUniformLocation(program, "projection"),
-		//	1,
-		//	GL_FALSE,
-		//	glm::value_ptr(projection)
-		//	);
 
 		for (std::list<IRenderable*>::iterator it = renderCollector.begin(); it != renderCollector.end(); ++it)
 		{

@@ -9,10 +9,8 @@ class SceneFactory;
 class SceneFactory
 {
 public:
-	static Scene* GetDefaultScene();
-	static Scene* FloatingShpehere();
+	static Scene* SceneTester();
 	static Scene* CubesCollide();
-	static Scene* TonsOfSpheres();
 	static Scene* CameraTest();
 	static Scene* ThreeBodies();
 	static Scene* OrbitingPlanet();

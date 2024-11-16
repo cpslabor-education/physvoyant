@@ -9,21 +9,31 @@ int main()
 	Engine::InitGLFW();
 	e->clock.SetPhysicsTimeStep(TO_TIME_UNIT(1.0 / 60.0));
 	e->SetFPS(0);
+	Scene* scene = nullptr;
 
-	e->SetActiveScene(SceneFactory::OrbitingPlanet());
-
-	bool close = false;
-
-	while (!close)
+	do
 	{
-		close = e->Run();
-		glfwPollEvents();
-		e->Time(60);
-	}
+		scene = SceneFactory::SceneTester();
+		e->SetActiveScene(scene);
+		if (scene == nullptr)
+		{
+			break;
+		}
 
-	delete e->GetActiveScene();
+		bool close = false;
+
+		while (!close)
+		{
+			close = e->Run();
+			glfwPollEvents();
+			e->Time(60);
+		}
+		delete e->GetActiveScene();
+		e->manualExit = false;
+	} while (scene != nullptr);
+
 	Engine::StopGLFW();
 	delete e;
-	std::cout << Engine::MemCheck();
+	// std::cout << Engine::MemCheck();
 	return 0;
 }
